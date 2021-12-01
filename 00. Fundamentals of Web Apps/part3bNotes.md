@@ -71,3 +71,40 @@ app.get('/', (req, res) => {
 - Browser fetches data from server.
 - Servers can be formed using Java Spring, Python Flask, Ruby on Rails, etc.
 - The example uses `Express` from `Node.js`.
+
+## Running Application Logic on the Browser
+- When going to the notes page, there are multiple HTTP requests.
+- We can see they have different types as well.
+    - We see document which is the HTML code of the page.
+    - Notice this document does not have any notes but a script tag linking to a JS file.
+- The javascript code that it links is as follows:
+```javascript
+var xhttp = new XMLHttpRequest();
+
+xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        const data = JSON.parse(this.responseText);
+        console.log(data);
+
+        var ul = document.createElement('ul');
+        ul.setAttribute('class', 'notes');
+
+        data.forEach(function(note) {
+            var li = document.createElement('li');
+
+            ul.appendChild(li);
+            li.appendChild(document.createTextNode(note.content));
+        });
+
+        document.getElementById('notes').appendChild(ul);
+    }
+};
+
+xhttp.open('GET', '/data.json', true);
+xhttp.send();
+```
+- This is not the modern way of implementing this.
+- Browser executes the code after getting JS file.
+- The last few lines opens a GET request to the data.json file.
+- Can install plugins to view JSON nicely in Chrome.
+- JS code downloads JSON and makes bullet point list out of the data.
