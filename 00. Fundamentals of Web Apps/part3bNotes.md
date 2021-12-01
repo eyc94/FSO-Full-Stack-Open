@@ -117,3 +117,7 @@ xhttp.send();
 - Function code checks the `readyState` equals 4 for operation complete and that HTTP status code of response is 200.
 - Event handler functions are callback functions.
 - Browser calls function when event occurs.
+
+## Document Object Model or DOM
+- Think of HTML pages as tree structures.
+- DOM is an Application Programming Interface (API) which enables programmatic modifications of element trees.
