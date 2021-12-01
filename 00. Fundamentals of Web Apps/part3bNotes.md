@@ -153,3 +153,28 @@ xhttp.send();
 7. Browser executes JS code and requests JSON data from server.
 8. Browser executes event handler that renders notes to display.
 
+## Forms and HTTP POST
+- The Notes page contains a form.
+- When button on form is clicked, browser sends user input to the server.
+- In the Network tab, we see a POST request to the address new_note.
+- Server responds with 302 meaning a URL redirect.
+- The redirect means server asks browser to do new GET request at the new URL.
+- Can also see the form data sent at the bottom.
+- The form has attributes `action` and `method` which means that submitting the form causes a POST request to the URL provided.
+- Code on server to handle POST request is:
+```javascript
+app.post('/new_note', (req, res) => {
+    notes.push({
+        content: req.body.note,
+        date: new Date()
+    });
+
+    return res.redirect('notes');
+});
+```
+- The code above is on the server and not on the JS fetched by the browser.
+- Data is sent as `body` of the POST request.
+- Server can access data by the `req.body` field of the request object `req`.
+- Server creates new note object and pushes to notes array.
+- Note object has fields content and date.
+- The server does not save new notes and new notes will not appear on page when server restarted.
