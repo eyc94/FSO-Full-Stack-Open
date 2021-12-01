@@ -39,3 +39,5 @@ const App = () => (
 export default App;
 ```
 - Files `App.css`, `App.test.js`, `index.css`, `logo.svg`, `setupTests.js` and `reportWebVitals.js` may be deleted.
+
+## Component
