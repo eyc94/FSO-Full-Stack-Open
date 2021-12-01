@@ -250,3 +250,15 @@ var sendToServer = function(note) {
 - Code determines that data is sent with HTTP POST request and in JSON.
 - Data type determined with Content-Type header.
 - Data is sent as JSON-string.
+
+## JavaScript Libraries
+- Sample app is done with vanilla JavaScript, using only DOM and JS to manipulate structure of pages.
+- There are different libraries. One of which is jQuery.
+    - Cross-browser compatibility.
+- SPA brought more modern ways of web dev than jQuery.
+    - First wave is Backbone JS.
+    - Google's AngularJS.
+    - Angular plummeted and Facebook's React library came about.
+- React is the most popular tool for implementing browser-side logic of web apps.
+- We get familiar with React and Redux libraries.
+- VueJS is capturing interest.
