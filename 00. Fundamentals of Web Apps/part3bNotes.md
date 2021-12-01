@@ -41,7 +41,6 @@
     - Server can also serve HTML files dynamically with data from database.
 - The example app's server serves HTML files dynamically because it contains information on the notes.
 - The HTML code of homepage is:
-
 ```javascript
 const getFrontPageHtml = (noteCount) => {
     return (`
