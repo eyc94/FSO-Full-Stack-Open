@@ -262,3 +262,13 @@ var sendToServer = function(note) {
 - React is the most popular tool for implementing browser-side logic of web apps.
 - We get familiar with React and Redux libraries.
 - VueJS is capturing interest.
+
+## Full Stack Web Development
+- Top layer is browser, which is closest to the end-user.
+- The bottom layer is the server.
+- Often a database layer below server.
+- Architecture of web app is a stack of layers.
+- The browser is the frontend and JS that runs on browser is frontend code.
+- Server is the backend.
+- We will code backend with JS using Node.js.
+- We can use same language on multiple layers.
