@@ -108,3 +108,12 @@ xhttp.send();
 - The last few lines opens a GET request to the data.json file.
 - Can install plugins to view JSON nicely in Chrome.
 - JS code downloads JSON and makes bullet point list out of the data.
+
+## Event Handlers and Callback Functions
+- Notice that code to send request to server is the last line.
+- The code to handle response is found further up.
+- Notice the event handler for event `onreadystatechange` defined for xhttp object doing request.
+- When state of object changes, browser calls event handler function.
+- Function code checks the `readyState` equals 4 for operation complete and that HTTP status code of response is 200.
+- Event handler functions are callback functions.
+- Browser calls function when event occurs.
