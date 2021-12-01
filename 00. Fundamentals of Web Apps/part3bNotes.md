@@ -121,3 +121,8 @@ xhttp.send();
 ## Document Object Model or DOM
 - Think of HTML pages as tree structures.
 - DOM is an Application Programming Interface (API) which enables programmatic modifications of element trees.
+
+## Manipulating the Document-Object From Console
+- Topmost node of DOM tree of HTML document is `document` object.
+- Can make changes to the document with DOM in the console.
+- However, changes are not permanent after refreshing.
