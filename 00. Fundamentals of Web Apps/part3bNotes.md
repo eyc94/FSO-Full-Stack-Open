@@ -142,3 +142,14 @@ xhttp.send();
 }
 ```
 - These are class selectors that style classes.
+
+## Loading a Page Containing JavaScript - Review
+1. Browser makes HTTP GET request to server for main page.
+2. Server responds with HTML file.
+3. Browser makes HTTP GET request for the CSS file.
+4. Server responds with CSS file.
+5. Browser makes HTTP GET request for the JS file.
+6. Server responds with JS file.
+7. Browser executes JS code and requests JSON data from server.
+8. Browser executes event handler that renders notes to display.
+
