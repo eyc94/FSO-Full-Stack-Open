@@ -1,4 +1,4 @@
-# Part 3B Notes
+# Part 0B Notes
 
 ## Fundamentals of Web Apps
 - Examine example application at `https://studies.cs.helsinki.fi/exampleapp`.
