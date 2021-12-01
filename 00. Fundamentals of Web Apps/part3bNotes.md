@@ -32,3 +32,43 @@
     3. The browser makes another HTTP GET request for the image file.
     4. The server sends the image back to the browser as a response.
     5. The browser then displays a page with the image.
+
+## Traditional Web Applications
+- Home page is like a traditional app.
+- Browser fetches HTML from server when entering page.
+- Server forms the document somehow.
+    - Document can be static text.
+    - Server can also serve HTML files dynamically with data from database.
+- The example app's server serves HTML files dynamically because it contains information on the notes.
+- The HTML code of homepage is:
+
+```javascript
+const getFrontPageHtml = (noteCount) => {
+    return (`
+        <!DOCTYPE html>
+        <html>
+            <head>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Full stack example app</h1>
+                    <p>number of notes created ${noteCount}</p>
+                    <a href="./notes">notes</a>
+                    <img src="kuva.png" width="200"/>
+                </div>
+            </body>
+        </html>
+    `)
+}
+
+app.get('/', (req, res) => {
+    const page = getFrontPageHtml(notes.length);
+    res.send(page);
+});
+```
+- Code above uses a template string to hold a template of HTML that changes the note count.
+- Dynamic part is the `noteCount` variable. This is the `notes.length` parameter.
+- Writing HTML in the middle of code is not smart but was the norm in PHP.
+- Browser fetches data from server.
+- Servers can be formed using Java Spring, Python Flask, Ruby on Rails, etc.
+- The example uses `Express` from `Node.js`.
