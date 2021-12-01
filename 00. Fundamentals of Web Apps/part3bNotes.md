@@ -126,3 +126,19 @@ xhttp.send();
 - Topmost node of DOM tree of HTML document is `document` object.
 - Can make changes to the document with DOM in the console.
 - However, changes are not permanent after refreshing.
+
+## CSS
+- The `head` element of HTML contains link to CSS file.
+- CSS is a markup language for the appearance of the page.
+- The file looks like below:
+```css
+.container {
+    padding: 10px;
+    border: 1px solid;
+}
+
+.notes {
+    color: blue;
+}
+```
+- These are class selectors that style classes.
