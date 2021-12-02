@@ -151,3 +151,61 @@ const App = () => {
 ```
 - Composing apps from resuable components.
 - Another strong convention is having `root component` called `App` at the top of the component tree of the app.
+
+## Props: Passing Data to Components
+- Pass data to components using `props`.
+- Modify component `Hello` as follows:
+```javascript
+const Hello = (props) => {
+    return (
+        <div>
+            <p>Hello {props.name}</p>
+        </div>
+    )
+};
+```
+- Function defining component has parameter `props`.
+- Parameter receives an object.
+- Object has fields corresponding to all the "props" the user of component defines.
+- Props are defined like so:
+```javascript
+const App = () => {
+    return (
+        <div>
+            <h1>Greetings</h1>
+            <Hello name="George" />
+            <Hello name="Daisy" />
+        </div>
+    )
+};
+```
+- Can be arbitrary number of props.
+- Values can be "hard coded" strings or JS expression results.
+- JS expressions must be wrapped in curly braces.
+- Modify the `Hello` component so it uses two props:
+```javascript
+const Hello = (props) => {
+    return (
+        <div>
+            <p>
+                Hello {props.name}, you are {props.age} years old
+            </p>
+        </div>
+    )
+};
+
+const App = () => {
+    const name = 'Peter';
+    const age = 10;
+
+    return (
+        <div>
+            <h1>Greetings</h1>
+            <Hello name="Maya" age={26 + 10} />
+            <Hello name={name} age={age} />
+        </div>
+    )
+};
+```
+- Props are sent by `App` component to the `Hello` component.
+- These are literals, variables, and results of expressions.
