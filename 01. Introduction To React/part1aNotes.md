@@ -113,3 +113,41 @@ const App = () => {
 - Projects created with `create-react-app` configured to compile automatically.
 - Every tag needs to be closed.
     - For example `<br>` needs to be written as `<br />`.
+
+## Multiple Components
+- Modify `App.js`:
+```javascript
+const Hello = () => {
+    return (
+        <div>
+            <p>Hello world</p>
+        </div>
+    )
+};
+
+const App = () => {
+    return (
+        <div>
+            <h1> Greetings</h1>
+            <Hello />
+        </div>
+    )
+};
+```
+- Defined new component called `Hello`.
+- We used it inside another component called `App`.
+- We can use it as many times as we want.
+```javascript
+const App = () => {
+    return (
+        <div>
+            <h1>Greetings</h1>
+            <Hello />
+            <Hello />
+            <Hello />
+        </div>
+    )
+};
+```
+- Composing apps from resuable components.
+- Another strong convention is having `root component` called `App` at the top of the component tree of the app.
