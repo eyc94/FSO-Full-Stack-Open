@@ -84,3 +84,32 @@ const App = () => {
 };
 ```
 - JS code in curly braces is evaluated and result is embedded into defined place in HTML produced by component.
+
+## JSX
+- Looks like React components are returning HTML.
+- They are not.
+- Layout of React components is written in JSX.
+- JSX looks like HTML, but we are dealing with a way to write JS.
+- JSX returned by React components is compiled into JS.
+- After compiling, our app looks like:
+```javascript
+const App = () => {
+    const now = new Date();
+    const a = 10;
+    const b = 20;
+    return React.createElement(
+        'div',
+        null,
+        React.createElement(
+            'p', null, 'Hello world, it is ', now.toString()
+        ),
+        React.createElement(
+            'p', null, a, ' plus ', b, ' is ', a + b
+        )
+    )
+};
+```
+- Compiling handled by `Babel`.
+- Projects created with `create-react-app` configured to compile automatically.
+- Every tag needs to be closed.
+    - For example `<br>` needs to be written as `<br />`.
