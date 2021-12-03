@@ -209,3 +209,30 @@ const App = () => {
 ```
 - Props are sent by `App` component to the `Hello` component.
 - These are literals, variables, and results of expressions.
+
+## Some Notes
+- React generates clear error messages.
+- Console should always be open.
+- If an error is encountered, fix it before proceeding.
+- It's good to write `console.log()` commands.
+- React component names must be capitalized.
+- React component needs one root element.
+    - We get an error if we define a component without an outermost, root element.
+- Using a root element is not the only way.
+    - An array of components is also valid (ugly).
+    - Use `fragments` by wrapping returned elements by empty elements.
+```javascript
+const App = () => {
+    const name = "Peter";
+    const age = 10;
+
+    return (
+        <>
+            <h1>Greetings</h1>
+            <Hello name="Maya" age={26 + 10} />
+            <Hello name={name} age={age} />
+            <Footer />
+        </>
+    )
+}
+```
