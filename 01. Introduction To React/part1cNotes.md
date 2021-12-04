@@ -390,3 +390,26 @@ const App = () => {
 - This causes `Display` and `Button` to also be re-rendered.
 - `Display` receives new value of counter (1) as props.
 - `Button` components receive event handlers which are used to change state of counter.
+
+## Refactoring the Components
+- Simplify `Display` by using `destructuring`:
+```javascript
+const Display = ({ counter }) => {
+    return (
+        <div>{counter}</div>
+    )
+};
+```
+- Can use a more compact arrow function because component contains only the return statement.
+```javascript
+const Display = ({ counter }) => <div>{counter}</div>;
+```
+- Simplify `Button` as well.
+```javascript
+const Button = ({ onClick, text }) => (
+    <button onClick={onClick}>
+        {text}
+    </button>
+)
+```
+- Use destructuring like above.
