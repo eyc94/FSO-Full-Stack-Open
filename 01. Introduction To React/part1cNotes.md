@@ -304,3 +304,75 @@ const App = () => {
     )
 };
 ```
+
+## Passing State to Child Components
+- Recommended to write components that are small and reusable.
+- Refactor application so it is composed of three smaller components.
+    - One for displaying counter.
+    - Two for buttons.
+- Implement a `Display` component responsible for displaying value of counter.
+- Best practice to **lift the state up** in component hierarchy.
+    - **Often, several components need to reflect the same changing data. We recommend lifting the shared state up to their closest common ancestor.**
+- Place the application's state in the `App` component and pass it down to the `Display` component through `props`:
+```javascript
+const Display = (props) => {
+    return (
+        <div>{props.counter}</div>
+    )
+};
+```
+- We only need to pass the state of `counter` to it.
+```javascript
+const App = () => {
+    const [ counter, setCounter ] = useState(0);
+
+    const increaseByOne = () => setCounter(counter + 1);
+    const setToZero = () => setCounter(0);
+
+    return (
+        <div>
+            <Display counter={counter} />
+            <button onClick={increaseByOne}>
+                plus
+            </button>
+            <button onClick={setToZero}>
+                zero
+            </button>
+        </div>
+    )
+};
+```
+- When buttons are clicked and `App` gets re-rendered, all children (including `Display`) will get re-rendered.
+- Make `Button` component for buttons of our app.
+    - Need to pass event handler and title of the button through props.
+```javascript
+const Button = (props) => {
+    return (
+        <button onClick={props.onClick}>
+            {props.text}
+        </button>
+    )
+};
+```
+- `App.js` now looks like:
+```javascript
+const App = () => {
+    const [ counter, setCounter ] = useState(0);
+
+    const increaseByOne = () => setCounter(counter + 1);
+    const decreaseByOne = () => setCounter(counter - 1);
+    const setToZero = () => setCounter(0);
+
+    return (
+        <div>
+            <Display counter={counter} />
+            <Button onClick={increaseByOne} text='plus' />
+            <Button onClick={setToZero} text='zero' />
+            <Button onClick={decreaseByOne} text='minus' />
+        </div>
+    )
+}
+```
+- Since the button is modularized, we can make another button with a different event handler, `decreaseByOne`.
+- Naming our prop is not significant.
+    - React's tutorial recommends this naming convention for the `onClick` prop.
