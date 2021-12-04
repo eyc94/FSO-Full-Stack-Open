@@ -106,3 +106,60 @@ const Hello = ({ name, age }) => {
     )
 };
 ```
+
+## Page Re-rendering
+- Appearance remains the same after initial rendering.
+- Create a counter where the value increased as a function of time or at the click of a button.
+- Modify `App.js`:
+```javascript
+import React from 'react';
+
+const App = (props) => {
+    const { counter } = props;
+    return (
+        <div>{counter}</div>
+    )
+};
+
+export default App;
+```
+- Modify `index.js`:
+```javascript
+import ReactDOM from 'react-dom';
+import App from './App';
+
+let counter = 1;
+
+ReactDOM.render(
+    <App counter={counter} />,
+    document.getElementById('root')
+)
+```
+- Changing file `index.js` does not refresh page automatically so reloading browser is necessary.
+- `App` is given value of counter via `counter` prop.
+- Component won't re-render if we add a counter increment.
+- Component can re-render by adding `ReactDOM.render` method.
+```javascript
+let counter = 1;
+
+const refresh = () => {
+    ReactDOM.render(<App counter={counter} />,
+    document.getElementById('root'));
+};
+
+refresh();
+counter += 1;
+refresh();
+counter += 1;
+refresh();
+```
+- Component renders 3 times first with 1, then 2, and finally 3.
+- Values 1 and 2 are shown for a short time, so cannot notice them.
+- We can increment every second instead using `setInterval` method.
+```javascript
+setInterval(() => {
+    refresh();
+    counter += 1;
+}, 1000);
+```
+- Making repeated calls to `ReactDOM.render` is NOT recommended.
