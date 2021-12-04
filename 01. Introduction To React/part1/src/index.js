@@ -1,22 +1,22 @@
 import ReactDOM from 'react-dom';
 import App from './App';
 
-let counter = 1;
+ReactDOM.render(
+    <App />,
+    document.getElementById('root')
+);
 
-const refresh = () => {
-    ReactDOM.render(
-        <App counter={counter} />,
-        document.getElementById('root')
-    );
-};
+// Old way of incrementing counter.
+// let counter = 1;
 
-setInterval(() => {
-    refresh();
-    counter += 1;
-}, 1000);
+// const refresh = () => {
+//     ReactDOM.render(
+//         <App counter={counter} />,
+//         document.getElementById('root')
+//     );
+// };
 
-// Old code before "Page re-rendering" section of part 1.
-// ReactDOM.render(
-//     <App />,
-//     document.getElementById('root')
-// );
+// setInterval(() => {
+//     refresh();
+//     counter += 1;
+// }, 1000);
