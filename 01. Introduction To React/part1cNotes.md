@@ -376,3 +376,17 @@ const App = () => {
 - Since the button is modularized, we can make another button with a different event handler, `decreaseByOne`.
 - Naming our prop is not significant.
     - React's tutorial recommends this naming convention for the `onClick` prop.
+
+## Changes in State Cause Rerendering
+- When app starts, code in `App` is executed.
+- Code uses a `useState` hook to create app state and initialize the `counter`.
+- This component contains `Display` component, which displays counter's value of 0.
+- This component contains 3 `Button` components, which have event handlers to change state of counter.
+- When one button is clicked, the button's event handler is executed.
+    - This changes the state of `App` component with the `setCounter` function.
+    - **Calling a function which changes the state causes the component to rerender.**
+- If a user clicks the *plus* button, the event handler changes the value of `counter` to 1.
+- The `App` component is rerendered.
+- This causes `Display` and `Button` to also be re-rendered.
+- `Display` receives new value of counter (1) as props.
+- `Button` components receive event handlers which are used to change state of counter.
