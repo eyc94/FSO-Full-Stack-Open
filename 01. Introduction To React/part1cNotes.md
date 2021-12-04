@@ -208,3 +208,73 @@ export default App;
 - The function passed to `setTimeout` is called one second after calling `setTimeout`.
 - When `setCounter` is called, React re-renders the component.
     - This means function body of component gets re-executed.
+
+## Event Handling
+- Change app so that counter is incremented on the click of a button.
+    - Done using a `button` element.
+- Button elements support `mouse events`.
+    - `click` is the most common.
+    - `click` event can also happen with the keyboard or touch screen.
+- In React, registering an event handler to a `click` event is like this:
+```javascript
+const App = () => {
+    const [ counter, setCounter ] = useState(0);
+
+    const handleClick = () => {
+        console.log('clicked');
+    };
+
+    return (
+        <div>
+            <div>{counter}</div>
+            <button onClick={handleClick}>
+                plus
+            </button>
+        </div>
+    )
+};
+```
+- Value of `onClick` attribute is a reference to the `handleClick` function.
+- Every click of the button causes the `handleClick` function to be called.
+    - Every click event causes the 'clicked' to log to console.
+- The event handler function can also be directly defined in value.
+```javascript
+const App = () => {
+    const [ counter, setCounter ] = useState(0);
+
+    return (
+        <div>
+            <div>{counter}</div>
+            <button onClick={() => console.log('clicked')}>
+                plus
+            </button>
+        </div>
+    )
+};
+```
+- Change the event handler to:
+```javascript
+<button onClick={() => setCounter(counter + 1)}>
+    plus
+</button>
+```
+- The desired behavior is achieved.
+- The `counter` is increased by 1 *and* component gets re-rendered.
+- Add a button to reset counter:
+```javascript
+const App = () => {
+    const [ counter, setCounter ] = useState(0);
+
+    return (
+        <div>
+            <div>{counter}</div>
+            <button onClick={() => setCounter(counter + 1)}>
+                plus
+            </button>
+            <button onClick={() => setCounter(0)}>
+                zero
+            </button>
+        </div>
+    )
+};
+```
