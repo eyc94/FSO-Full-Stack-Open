@@ -140,3 +140,53 @@ object['secret number'] = 12341;
 - Objects can also have methods.
 - In this course, we won't define objects with methods.
 - Objects can be defined using constructor functions.
+
+## Functions
+- Complete way to define arrow functions:
+```javascript
+const sum = (p1, p2) => {
+    console.log(p1);
+    console.log(p2);
+    return p1 + p2;
+};
+
+const result = sum(1, 5);
+console.log(result);
+```
+- If there is just one parameter, remove parentheses:
+```javascript
+const square = p => {
+    console.log(p);
+    return p * p;
+};
+```
+- If there is just one expression, remove braces.
+```javascript
+const square = p => p * p;
+```
+- Handy when manipulating arrays using `map` method.
+```javascript
+const t = [1, 2, 3];
+const tSquared = t.map(p => p * p);
+// tSquared is now [1, 4, 9].
+```
+- Prior to ES6, only way to define functions was with `function` keyword.
+- Two ways to reference functions:
+    - First is giving a name in a `function declaration`.
+    - Second is using a `function expression`.
+```javascript
+// Function declaration.
+function product(a, b) {
+    return a * b;
+}
+
+const result = product(2, 6);
+// result is now 12.
+
+// Function expression.
+const average = function(a, b) {
+    return (a + b) / 2;
+};
+
+const result = average(2, 5);
+```
