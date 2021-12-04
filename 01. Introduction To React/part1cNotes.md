@@ -50,3 +50,59 @@ const Hello = (props) => {
     - Age is directly accessed by props.
 - Helper function defined inside function that defines behavior of component.
 - Common to define functions in functions.
+
+## Destructuring
+- Small but useful feature of JS allows us to `destructure` values from objects and arrays upon assignment.
+- We referenced data to our components as `props.name` and `props.age`.
+- We can assign values of properties to variables `name` and `age` directly.
+- We know `props` is an object:
+```javascript
+props = {
+    name: 'Arto Hellas',
+    age: 35
+};
+```
+```javascript
+const Hello = (props) => {
+    const name = props.name;
+    const age = props.age;
+
+    const bornYear = () => new Date().getFullYear() - age;
+
+    return (
+        <div>
+            <p>Hello {name}, you are {age} years old</p>
+            <p>So you were probably born in {bornYear()}</p>
+        </div>
+    )
+};
+```
+- Notice the compact version of bornYear function.
+- Destructuring makes it easier.
+```javascript
+const Hello = (props) => {
+    const { name, age } = props;
+
+    const bornYear = () => new Date().getFullYear() - age;
+
+    return (
+        <div>
+            <p>Hello {name}, you are {age} years old</p>
+            <p>So you were probably born in {bornYear()}</p>
+        </div>
+    )
+};
+```
+- Take it a step further:
+```javascript
+const Hello = ({ name, age }) => {
+    const bornYear = () => new Date().getFullYear() - age;
+
+    return (
+        <div>
+            <p>Hello {name}, you are {age} years old</p>
+            <p>So you were probably born in {bornYear()}</p>
+        </div>
+    )
+};
+```
