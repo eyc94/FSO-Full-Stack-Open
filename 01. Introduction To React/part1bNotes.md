@@ -272,3 +272,30 @@ const arto = {
 ```javascript
 setTimeout(arto.greet.bind(arto), 1000);
 ```
+
+## Classes
+- No class mechanism like OOP languages.
+- Features to simulate classes is here.
+- `class` syntax introduced with ES6.
+- Define a `class` called Person:
+```javascript
+class Person {
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    };
+
+    greet() {
+        console.log('hello, my name is ' + this.name);
+    }
+};
+
+const adam = new Person('Adam Ondra', 35);
+adam.greet();
+
+const janja = new Person('Janja Garnbret', 22);
+janja.greet();
+```
+- Type of both objects is `Object`.
+- JS defines only the types `Boolean`, `Null`, `Undefined`, `Number`, `String`, `Symbol`, `BigInt`, and `Object`.
+- ES6 class syntax is used in old React and in Node.js.
