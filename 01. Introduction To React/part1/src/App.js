@@ -3,15 +3,20 @@ import React, { useState } from 'react';
 const App = () => {
     const [counter, setCounter] = useState(0);
 
-    setTimeout(
-        () => setCounter(counter + 1),
-        1000
-    );
-
     return (
-        <div>{counter}</div>
+        <div>
+            <div>{counter}</div>
+            <button onClick={() => setCounter(counter + 1)}>
+                plus
+            </button>
+            <button onClick={() => setCounter(0)}>
+                zero
+            </button>
+        </div>
     )
 };
+
+export default App;
 
 // Code before "Page re-rendering" section of part 1.
 // const Hello = ({ name, age }) => {
@@ -39,5 +44,3 @@ const App = () => {
 //         </div>
 //     )
 // };
-
-export default App;
