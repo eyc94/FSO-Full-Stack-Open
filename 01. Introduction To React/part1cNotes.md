@@ -163,3 +163,48 @@ setInterval(() => {
 }, 1000);
 ```
 - Making repeated calls to `ReactDOM.render` is NOT recommended.
+
+## Stateful Component
+- Components have not contained any state that could change during lifecycle of component.
+- Add state to our application's `App` component with React's `state hook`.
+- Change `index.js` back to:
+```javascript
+import ReactDOM from 'react-dom';
+import App from './App';
+
+ReactDOM.render(
+    <App />,
+    document.getElementById('root')
+);
+```
+- Modify `App.js`:
+```javascript
+import React, { useState } from 'react';
+
+const App = () => {
+    const [ counter, setCounter ] = useState(0);
+
+    setTimeout(
+        () => setCounter(counter + 1),
+        1000
+    );
+
+    return (
+        <div>{counter}</div>
+    )
+};
+
+export default App;
+```
+- The file imports the `useState` function.
+- We see the function call which adds `state` to the component and initializes it to 0.
+- Function returns an array of two items.
+    - Assign items to variables `counter` and `setCounter` by using destructuring syntax.
+    - `counter` is assigned initial value of state, 0.
+    - `setCounter` is assigned to a function used to *modify* the state.
+- Application calls `setTimeout` and passes two parameters:
+    - The first is a function to increment the counter state.
+    - The second is a timeout of 1 second.
+- The function passed to `setTimeout` is called one second after calling `setTimeout`.
+- When `setCounter` is called, React re-renders the component.
+    - This means function body of component gets re-executed.
