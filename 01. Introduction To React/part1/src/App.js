@@ -1,10 +1,7 @@
 import React from 'react';
 
-const Hello = (props) => {
-    const bornYear = () => {
-        const yearNow = new Date().getFullYear();
-        return yearNow - props.age;
-    };
+const Hello = ({ name, age }) => {
+    const bornYear = () => new Date().getFullYear() - age;
 
     return (
         <div>
