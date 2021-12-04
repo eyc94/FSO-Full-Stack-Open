@@ -278,3 +278,29 @@ const App = () => {
     )
 };
 ```
+
+## Event Handler is a Function
+- Event handlers are supposed to be a function or a function reference.
+- We cannot use a function call.
+- Defining event handlers within JSX-templates is not good.
+- Separate them into separate functions:
+```javascript
+const App = () => {
+    const [ counter, setCounter ] = useState(0);
+
+    const increaseByOne = () => setCounter(counter + 1);
+    const setToZero = () => setCounter(0);
+
+    return (
+        <div>
+            <div>{counter}</div>
+            <button onClick={increaseByOne}>
+                plus
+            </button>
+            <button onClick={setToZero}>
+                zero
+            </button>
+        </div>
+    )
+};
+```
