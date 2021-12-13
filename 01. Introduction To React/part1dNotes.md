@@ -102,3 +102,5 @@ const handleLeftClick = () => {
 - It is **forbidden** in React to mutate states directly.
 - Changing state must always be done by setting state to a new object.
 - Storing click counters in a different piece of state is a better choice.
+
+## Handling Arrays
