@@ -239,3 +239,20 @@ const App = () => {
     - Done using JS class syntax.
 - Good to know legacy React for older systems out there.
 
+## Debugging React Applications
+- Large part of developer's time is figuring out why something is broken.
+- Good practice and tools is important.
+- Keep developer console open at all times!!
+- Fix the bug before coding more.
+- Print based debugging is a good idea too.
+- Should print variables out to the console as well.
+- Need to transform destructured back to less compact way before printing it.
+- You can pause execution of app code console's debugger by writing `debugger` command.
+- Can also add breakpoints in `Sources` tab.
+- `Scope` tab shows values of component's variables.
+- Recommended to add `React developer tools` extension:
+    - `https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi`
+    - Adds new `Components` tab to developer tools.
+    - Can be used to inspect different React elements in the app with their props and state.
+    - Shows state of hooks in order they were defined.
+
