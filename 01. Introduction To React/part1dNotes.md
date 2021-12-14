@@ -231,3 +231,11 @@ const App = () => {
     )
 };
 ```
+
+## Old React
+- We used `state hook` to add state.
+- Before hooks, there was no way to add state to components.
+- Components requiring states had to be defined as `class` components.
+    - Done using JS class syntax.
+- Good to know legacy React for older systems out there.
+
