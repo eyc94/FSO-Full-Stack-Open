@@ -6,6 +6,15 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
+// Part 1C.
+// import ReactDOM from 'react-dom';
+// import App from './App';
+
+// ReactDOM.render(
+//     <App />,
+//     document.getElementById('root')
+// );
+
 // Old way of incrementing counter.
 // let counter = 1;
 
