@@ -521,3 +521,63 @@ const Button = (props) => {
 - Component gets event handler function from `handleClick` prop.
 - It gets text from the `text` prop.
 - Make sure the correct attribute names are assigned and written when passing props to the component.
+
+## Do Not Define Components Within Components
+- Start by displaying value of app into its own `Display` component.
+- We will define a new component inside of the `App` component.
+```javascript
+// This is the right place to define a component.
+const Button = (props) => {
+    <button onClick={props.handleClick}>
+        {props.text}
+    </button>
+};
+
+const App = () => {
+    const [value, setValue] = useState(10);
+
+    const setToValue = newValue => {
+        setValue(newValue);
+    };
+
+    // Do not define components inside another component.
+    const Display = props => <div>{props.value}</div>
+
+    return (
+        <div>
+            <Display value={value} />
+            <Button handleClick={() => setToValue(1000)} text="thousand" />
+            <Button handleClick={() => setToValue(0)} text="reset" />
+            <Button handleClick={() => setToValue(value + 1)} text="increment" />
+        </div>
+    )
+};
+```
+- Never define a component in a component.
+- Instead move the `Display` component to its proper place.
+```javascript
+const Display = props => <div>{props.value}</div>
+
+const Button = (props) => {
+    <button onClick={props.handleClick}>
+        {props.text}
+    </button>
+};
+
+const App = () => {
+    const [value, setValue] = useState(10);
+
+    const setToValue = newValue => {
+        setValue(newValue);
+    };
+    
+    return (
+        <div>
+            <Display value={value} />
+            <Button handleClick={() => setToValue(1000)} text="thousand" />
+            <Button handleClick={() => setToValue(0)} text="reset" />
+            <Button handleClick={() => setToValue(value + 1)} text="increment" />
+        </div>
+    )
+};
+```
