@@ -25,3 +25,13 @@
 ```
 - However, using the log function is so common, so VSCode has a snippet built in.
     - Type `log` and tab to autocomplete.
+
+## JavaScript Arrays
+- We will be using the functional programming methods of arrays.
+    - `find`, `filter`, and `map`.
+- These videos will help: `https://www.youtube.com/playlist?list=PL0zVEGEvSaeEd9hlmCXrk5yUyqUag-n84`
+    - Higher Order Functions: `https://www.youtube.com/watch?v=BMUiFMZr7vk&list=PL0zVEGEvSaeEd9hlmCXrk5yUyqUag-n84`
+    - Map: `https://www.youtube.com/watch?v=bCqtb-Z5YGQ&list=PL0zVEGEvSaeEd9hlmCXrk5yUyqUag-n84&index=3`
+    - Reduce Basics: `https://www.youtube.com/watch?v=Wl98eZpkp-c&t=31s`
+
+## Event Handlers Revisited
