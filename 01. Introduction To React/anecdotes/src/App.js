@@ -13,10 +13,20 @@ const App = () => {
 
     const [selected, setSelected] = useState(0);
 
+    const handleRandomIndex = () => {
+        const randomNum = Math.floor(Math.random() * 7);
+        setSelected(randomNum);
+    };
+
     return (
-        <div>
-            {anecdotes[selected]}
-        </div>
+        <>
+            <div>
+                {anecdotes[selected]}
+            </div>
+            <div>
+                <button onClick={handleRandomIndex}>next anecdote</button>
+            </div>
+        </>
     )
 };
 
