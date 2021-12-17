@@ -35,3 +35,6 @@
     - Reduce Basics: `https://www.youtube.com/watch?v=Wl98eZpkp-c&t=31s`
 
 ## Event Handlers Revisited
+- Look at the previous part's explanation.
+- Can also find information on passing event handlers to child components.
+
