@@ -230,3 +230,23 @@ notes.map(note =>
 );
 ```
 - Must use curly braces.
+
+## Anti-Pattern: Array Indexes as Keys
+- With the error message from earlier, I could have fixed by using array indices as keys.
+- Indices can be retrieved with a second parameter to the callback function of `map`:
+```javascript
+notes.map((note, i) => ...);
+```
+- The `i` is assigned the value of the index of the note.
+- So, one way to define row generation:
+```javascript
+<ul>
+    {notes.map((note, i) =>
+        <li key={i}>
+            {note.content}
+        </li>
+    )};
+</ul>
+```
+- This is NOT recommended.
+- Read more about it here: `https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318`
