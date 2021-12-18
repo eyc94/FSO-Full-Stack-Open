@@ -250,3 +250,86 @@ notes.map((note, i) => ...);
 ```
 - This is NOT recommended.
 - Read more about it here: `https://robinpokorny.medium.com/index-as-a-key-is-an-anti-pattern-e0349aece318`
+
+## Refactoring Modules
+- Refactor a bit by destructuring:
+```javascript
+const App = ({ notes }) => {
+    return (
+        <div>
+            <h1>Notes</h1>
+            <ul>
+                {notes.map(note =>
+                    <li key={note.id}>
+                        {note.content}
+                    </li>
+                )};
+            </ul>
+        </div>
+    )
+};
+```
+- Separate displaying single note into its own component `Note`.
+```javascript
+const Note = ({ note }) => {
+    return (
+        <li>{note.content}</li>
+    )
+};
+
+const App = ({ notes }) => {
+    return (
+        <div>
+            <h1>Notes</h1>
+            <ul>
+                {notes.map(note =>
+                    <Note key={note.id} note={note} />
+                )}
+            </ul>
+        </div>
+    )
+};
+```
+- Note the `key` attribute is defined in the `Note` component tag.
+    - It used to be defined in the `li` tag.
+- It is good practice to declare each component in their own file as an `ES6-module`.
+- Have been using modules this whole time.
+```javascript
+import ReactDOM from 'react-dom';
+import App from './App';
+```
+- This imports two modules to use in the file.
+- The modules are placed in variables called `ReactDOM` and `App`, respectively.
+- Move `Note` component to its own module.
+    - Components are placed in folder called `components`.
+    - `components` is placed in a folder called `src`.
+    - Name the file after the component.
+- So, created folder called `components` and place a file called `Note.js` in it.
+- The contents of `Note.js` is below:
+```javascript
+import React from 'react';
+
+const Note = ({ note }) => {
+    return (
+        <li>{note.content}</li>
+    )
+};
+
+export default Note;
+```
+- This is a React component, so import React.
+- The last line exports the module, the variable `Note`.
+- The file using the component can `import` the module:
+```javascript
+import React from 'react';
+import Note from './components/Note';
+
+const App = ({ note }) => {
+    // ...
+};
+```
+- Location must be given in relation to the importing file.
+- The period means the current directory.
+- The `.js` extension can be omitted.
+- Modules have other uses than component declarations.
+
