@@ -333,3 +333,8 @@ const App = ({ note }) => {
 - The `.js` extension can be omitted.
 - Modules have other uses than component declarations.
 
+## When The Application Breaks
+- Applications can break.
+- Best way is to use `console.log()`.
+- Try to log one step at a time to check one layer is working before moving to the next layer.
+- Remove destructuring to see the variables' values.
