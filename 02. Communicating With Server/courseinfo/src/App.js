@@ -26,10 +26,10 @@ const Part = (props) => {
     )
 };
 
-const Total = (props) => {
+const Total = ({ course }) => {
     return (
         <div>
-            Total of {props.course.parts.map(part =>
+            Total of {course.parts.map(part =>
                 part.exercises
             ).reduce((prev, curr) =>
                 prev + curr, 0
