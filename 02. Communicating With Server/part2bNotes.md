@@ -177,4 +177,89 @@ const addNote = (event) => {
 - The event handler also resets the value of the controlled input element.
     - Done by calling `setNewNote` with an empty string.
 
+## Filtering Displayed Elements
+- View only important notes.
+- Add piece of state to `App` that keeps track of which notes to display.
+```javascript
+const App = (props) => {
+    const [notes, setNotes] = useState(props.notes);
+    const [newNote, setNewNote] = useState('');
+    const [showAll, setShowAll] = useState(true);
+
+    // ...
+};
+```
+- Make a `notesToShow` variable that stores list of all notes to display.
+- Items of this list depend on state of `showAll`.
+```javascript
+import React, { useState } from 'react';
+import Note from './components/Note';
+
+const App = (props) => {
+    const [notes, setNotes] = useState(props.notes);
+    const [newNote, setNewNote] = useState('');
+    const [showAll, setShowAll] = useState(true);
+
+    // ...
+
+    const notesToShow = showAll
+        ? notes
+        : notes.filter(note => note.important === true);
     
+    return (
+        <div>
+            <h1>Notes</h1>
+            <ul>
+                {notesToShow.map(note =>
+                    <Note key={note.id} note={note} />
+                )}
+            </ul>
+        </div>
+    )
+};
+```
+- The `notesToShow` variable depends on the state of `showAll`.
+- Uses a conditional operator.
+    - If `showAll` is true, the app just shows all notes.
+    - Otherwise, the `notes` array is filtered to hold only those notes that are important.
+    - This filtered array is now in `notesToShow` array.
+- Comparison operator is redundant.
+    - Value of `note.important` is true or false either way.
+```javascript
+notes.filter(note => note.important);
+```
+- Safer to use triple equals than double equals.
+- Need to add functionality to change the state of `showAll` from true to false and vice versa.
+```javascript
+import React, { useState } from 'react';
+import Note from './components/Note';
+
+const App = (props) => {
+    const [notes, setNotes] = useState(props.notes);
+    const [newNote, setNewNote] = useState('');
+    const [showAll, setShowAll] = useState(true);
+
+    // ...
+
+    return (
+        <div>
+            <h1>Notes</h1>
+            <div>
+                <button onClick={() => setShowAll(!showAll)}>
+                    show {showAll ? 'important' : 'all' }
+                </button>
+            </div>
+            <ul>
+                {notesToShow.map(note =>
+                    <Note key={note.id} note={note} />
+                )}
+            </ul>
+        </div>
+    )
+};
+```
+- The displayed notes depend on the button I press.
+    - The button changes the state of `showAll`.
+- Event handler for the button calls the function that modifies the `showAll` state.
+    - Simple so it is defined in the attribute.
+- Text of button depends on `showAll` state as well.
