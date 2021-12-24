@@ -48,3 +48,11 @@ npx json-server --port 3001 --watch db.json
 - `json-server` stores data in `db.json`.
 - Real world uses databases to store data.
 - `json-server` is a handy tool that enables server-side functionality in development phase without the need to program any of it.
+
+## The Browser As A Runtime Environment
+- First task:
+    - Fetch existing notes to React app from `http://localhost:3001/notes`.
+- Part 0 example project used `XMLHttpRequest`.
+    - HTTP request made using an XHR object.
+    - Introduced in 1999.
+    - No longer recommended and browsers now support the `fetch` method based on `promises`.
