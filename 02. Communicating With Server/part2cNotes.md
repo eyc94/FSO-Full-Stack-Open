@@ -355,3 +355,14 @@ useEffect(hook, []);
 - Understanding the order of execution is important!
 - We still have a problem that when adding new notes, they are not stored on the server.
 
+## The Development Runtime Environment
+- Review what happens and where.
+- Basically, the JS of our React app is run in the browser.
+    - Browser gets JS code from `React dev server`.
+    - `React dev server` is the app that runs after `npm start`.
+    - The dev server transforms JS code to format understood by browser.
+        - Stitches JS from different files into one file.
+- React app running in browser fetches JSON data from `json-server` running on port 3001.
+    - The server we query data from, `json-server`, gets the data from `db.json`.
+- All parts of the app happen to reside in the developer's machine (localhost).
+- Situation changes when deploying to internet.
