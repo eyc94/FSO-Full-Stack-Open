@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Weather from './Weather';
 
 const CountryInfo = (props) => {
     const keys = Object.keys(props.country.languages);
+
     return (
         <div>
             <h2>{props.country.name.common}</h2>
@@ -14,6 +16,7 @@ const CountryInfo = (props) => {
                 )}
             </ul>
             <img src={props.country.flags.png}></img>
+            <Weather country={props.country} />
         </div>
     )
 };
