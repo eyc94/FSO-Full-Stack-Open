@@ -21,9 +21,25 @@ const App = () => {
         return country.name.common.toLowerCase().includes(countryFilter.toLowerCase());
     });
 
+    // If there are more than 10 countries.
+    if (countriesToShow.length > 10) {
+        return (
+            <div>
+                <div>find countries <input value={countryFilter} onChange={handleChangeFilter} /></div>
+                Too many matches, specify another filter
+            </div>
+        )
+    }
+
+    // If there are 10 or less countries.
     return (
         <div>
             <div>find countries <input value={countryFilter} onChange={handleChangeFilter} /></div>
+            {countriesToShow.map(country => {
+                return (
+                    <div>{country.name.common}</div>
+                )
+            })}
         </div>
     )
 };
