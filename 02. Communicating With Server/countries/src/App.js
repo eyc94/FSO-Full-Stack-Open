@@ -14,9 +14,12 @@ const App = () => {
     }, []);
 
     const handleChangeFilter = (event) => {
-        console.log(event.target.value);
         setCountryFilter(event.target.value);
     };
+
+    const countriesToShow = countries.filter(country => {
+        return country.name.common.toLowerCase().includes(countryFilter.toLowerCase());
+    });
 
     return (
         <div>
