@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const App = () => {
     const [countries, setCountries] = useState([]);
+    const [countryFilter, setCountryFilter] = useState('');
 
     useEffect(() => {
         axios
@@ -12,9 +13,14 @@ const App = () => {
             });
     }, []);
 
+    const handleChangeFilter = (event) => {
+        console.log(event.target.value);
+        setCountryFilter(event.target.value);
+    };
+
     return (
         <div>
-            <div>find countries <input /></div>
+            <div>find countries <input value={countryFilter} onChange={handleChangeFilter} /></div>
         </div>
     )
 };
