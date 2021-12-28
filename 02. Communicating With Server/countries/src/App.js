@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Button from './components/Button';
 
 const App = () => {
     const [countries, setCountries] = useState([]);
@@ -15,6 +16,10 @@ const App = () => {
 
     const handleChangeFilter = (event) => {
         setCountryFilter(event.target.value);
+    };
+
+    const showHandler = () => {
+
     };
 
     const countriesToShow = countries.filter(country => {
@@ -57,7 +62,10 @@ const App = () => {
             <div>find countries <input value={countryFilter} onChange={handleChangeFilter} /></div>
             {countriesToShow.map(country => {
                 return (
-                    <div key={country.name.common}>{country.name.common}</div>
+                    <div key={country.name.common}>
+                        {country.name.common}
+                        <Button country={country} />
+                    </div>
                 )
             })}
         </div>
