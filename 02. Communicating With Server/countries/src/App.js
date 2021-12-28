@@ -25,10 +25,12 @@ const App = () => {
 
     // If there is 1 country matched.
     if (countriesToShow.length === 1) {
-        <>
-            <div>find countries <input value={countryFilter} onChange={handleChangeFilter} /></div>
-            <CountryInfo country={countriesToShow[0]} />
-        </>
+        return (
+            <>
+                <div>find countries <input value={countryFilter} onChange={handleChangeFilter} /></div>
+                <CountryInfo country={countriesToShow[0]} />
+            </>
+        )
     }
 
     // If there are more than 10 countries.
