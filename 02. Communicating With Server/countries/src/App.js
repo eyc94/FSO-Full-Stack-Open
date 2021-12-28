@@ -21,6 +21,26 @@ const App = () => {
         return country.name.common.toLowerCase().includes(countryFilter.toLowerCase());
     });
 
+    // If there is 1 country matched.
+    if (countriesToShow.length === 1) {
+        const keys = Object.keys(countriesToShow[0].languages);
+        return (
+            <div>
+                <div>find countries <input value={countryFilter} onChange={handleChangeFilter} /></div>
+                <h2>{countriesToShow[0].name.common}</h2>
+                <div>Capital: {countriesToShow[0].capital[0]}</div>
+                <div>Population: {countriesToShow[0].population}</div>
+                <h3>Languages</h3>
+                <ul>
+                    {keys.map(key =>
+                        <li key={key}>{countriesToShow[0].languages[key]}</li>
+                    )}
+                </ul>
+                <img src={countriesToShow[0].flags.png}></img>
+            </div>
+        )
+    }
+
     // If there are more than 10 countries.
     if (countriesToShow.length > 10) {
         return (
@@ -37,7 +57,7 @@ const App = () => {
             <div>find countries <input value={countryFilter} onChange={handleChangeFilter} /></div>
             {countriesToShow.map(country => {
                 return (
-                    <div>{country.name.common}</div>
+                    <div key={country.name.common}>{country.name.common}</div>
                 )
             })}
         </div>
