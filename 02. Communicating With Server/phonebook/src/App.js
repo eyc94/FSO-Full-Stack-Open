@@ -29,7 +29,11 @@ const App = () => {
             const msg = `${newName} is already added to the phonebook`;
             window.alert(msg);
         } else {
-            setPersons(persons.concat(personObject));
+            axios
+                .post('http://localhost:3001/persons', personObject)
+                .then(response => {
+                    setPersons(persons.concat(response.data));
+                });
         }
         setNewName('');
         setNewNumber('');
