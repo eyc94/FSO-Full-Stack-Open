@@ -73,3 +73,89 @@ const addNote = (event) => {
 - Next part deals with coding logic for backend.
     - We also use `Postman`.
 - Wiser to let backend generate note timestamp.
+
+## Changing The Importance Of Notes
+- Add a button to every note that toggles its importance.
+- Make changes to `Note` component:
+```javascript
+const Note = ({ note, toggleImportance }) => {
+    const label = note.important ? 'make not important' : 'make important';
+
+    return (
+        <div>
+            {note.content}
+            <button onClick={toggleImportance}>{label}</button>
+        </div>
+    )
+};
+```
+- Add a button and assign its event handler as `toggleImportance` function passed in as props.
+    - The `App` component defines this function and passes it to the `Note` component.
+```javascript
+const App = () => {
+    const [notes, setNotes] = useState([]);
+    const [newNote, setNewNote] = useState('');
+    const [showAll, setShowAll] = useState(true);
+
+    // ...
+
+    const toggleImportanceOf = (id) => {
+        console.log('importance of ' + id + ' needs to be toggled');
+    };
+
+    // ...
+
+    return (
+        <div>
+            <h1>Notes</h1>
+            <div>
+                <button onClick={() => setShowAll(!showAll)}>
+                    show {showAll ? 'important' : 'all'}
+                </button>
+            </div>
+            <ul>
+                {notesToShow.map((note, i) =>
+                    <Note
+                        key={i}
+                        note={note}
+                        toggleImportance={() => toggleImportanceOf(note.id)}
+                    />
+                )}
+            </ul>
+        </div>
+    )
+};
+```
+- Every note receives its own unique event handler because of the id passed to it.
+- A note stored in json-server backend can be modified in two ways by making HTTP requests to the note's unique URL.
+    - Replace the entire note with HTTP PUT request.
+    - Change some of the note's properties with HTTP PATCH request.
+- Final form of event handler function:
+```javascript
+const toggleImportanceOf = id => {
+    const url = `http://localhost:3001/notes/${id}`;
+    const note = notes.find(n => n.id === id);
+    const changedNote = { ...note, important: !note.important };
+
+    axios.put(url, changedNote).then(response => {
+        setNotes(notes.map(note => note.id !== id ? note : response.data));
+    });
+};
+```
+- First line defines the unique url for each note resource based on id.
+- Find note we want to modify with `find` method.
+    - Assign this note to the `note` variable.
+- Create a new object called `changedNote` that is an exact copy of the old note.
+    - The `important` property is changed, however.
+    - Uses the `object spread` syntax.
+    - The value of `important` gets the negation of the current value of it.
+- `changedNote` is a shallow copy of the original.
+    - If the old object values were objects then the new object values would reference the old object values directly.
+- New note sent with PUT request to backend to replace old object.
+- The callback function updates the `notes` state.
+    - This is the new array that contains all items from previous array.
+    - The old note is replaced by the updated version (note.id === id).
+- `map` method creates new array by mapping every item from old array into new array.
+    - New array created on the condition that `note.id !== id`.
+    - If true, copy the old item to new array.
+    - If false, the note object returned by server is added to new array.
