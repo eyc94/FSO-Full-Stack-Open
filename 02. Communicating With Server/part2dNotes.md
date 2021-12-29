@@ -399,3 +399,73 @@ const person = { name, age };
 ```
 - The old way is the first object definition.
 - New way is the second.
+
+## Promises and Errors
+- If app allowed deletion of notes.
+    - Changing the importance of a note that is already deleted can happen.
+- Simulate above by making `getAll` function return hardcoded note that does not exist in backend server.
+```javascript
+const getAll = () => {
+    const request = axios.get(baseUrl);
+    const nonExisting = {
+        id: 10000,
+        content: 'This note is not saved to server',
+        date: '2019-05-30T17:30:31.098Z',
+        important: true
+    };
+    return request.then(response => response.data.concat(nonExisting));
+};
+```
+- Change importance of the hardcoded note.
+    - Get error in console.
+    - Backend server responded to HTTP PUT request with status 404 not found.
+- Should handle these errors quietly.
+- Current code does not handle rejected promises.
+    - Common way of adding handler for rejected promises is `catch` method.
+```javascript
+axios
+    .get('http://example.com/probably_will_fail')
+    .then(response => {
+        console.log('success!');
+    })
+    .catch(error => {
+        console.log('fail');
+    });
+```
+- If request fails, the `catch` method's event handler is called.
+- `catch` method is placed deep in promise chain.
+    - Can be placed at the end when all promises in chain throws error.
+```javascript
+axios
+    .put(`${baseUrl}/${id}`, newObject)
+    .then(response => response.data)
+    .then(changedNote => {
+        // ...
+    })
+    .catch(error => {
+        console.log('fail');
+    });
+```
+- Use this idea to register event handler in `App`:
+```javascript
+const toggleImportanceOf = id => {
+    const note = notes.find(n => n.id === id);
+    const changedNote = { ...note, important: !note.important };
+
+    noteService
+        .update(id, changedNote).then(returnedNote => {
+            setNotes(notes.map(note => note.id !== id ? note : returnedNote));
+        })
+        .catch(error => {
+            alert(
+                `The note '${note.content}' was already deleted from server.`
+            );
+            setNotes(notes.filter(n => n.id !== id));
+        });
+};
+```
+- Error gives alert.
+- Deleted note gets filtered out of state.
+    - Removing already deleted note done with `filter` method.
+    - Returns new array with only items from list for which function that was passed as parameter returns true for.
+- Using the `alert()` function is not a good idea.
