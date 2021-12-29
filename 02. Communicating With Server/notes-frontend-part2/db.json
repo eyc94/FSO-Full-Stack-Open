@@ -10,7 +10,7 @@
       "id": 2,
       "content": "Browser can execute only JavaScript",
       "date": "2019-05-30T18:39:34.091Z",
-      "important": true
+      "important": false
     },
     {
       "id": 3,
@@ -53,6 +53,12 @@
       "date": "2021-12-29T20:00:40.455Z",
       "important": false,
       "id": 9
+    },
+    {
+      "content": "hi",
+      "date": "2021-12-29T20:43:21.844Z",
+      "important": true,
+      "id": 10
     }
   ]
 }
