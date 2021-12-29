@@ -159,3 +159,169 @@ const toggleImportanceOf = id => {
     - New array created on the condition that `note.id !== id`.
     - If true, copy the old item to new array.
     - If false, the note object returned by server is added to new array.
+
+## Extracting Communication With The Backend Into A Separate Module
+- `App` component now bloated.
+    - Has code that communicates to backend server.
+- Extract this communication to its own module.
+- Create `src/services` directory and add file called `notes.js`.
+```javascript
+import axios from 'axios';
+const baseUrl = 'http://localhost:3001/notes';
+
+const getAll = () => {
+    return axios.get(baseUrl);
+};
+
+const create = newObject => {
+    return axios.post(baseUrl, newObject);
+};
+
+const update = (id, newObject) => {
+    return axios.put(`${baseUrl}/${id}`, newObject);
+};
+
+export default {
+    getAll: getAll,
+    create: create,
+    update: update
+};
+```
+- Module returns object with three functions as its properties.
+    - These functions deal with the notes.
+    - Functions return promises returned by axios methods.
+- `App` component imports these modules.
+```javascript
+import noteService from './services/notes';
+
+const App = () => {
+```
+- Functions of the module can now be used directly with variable.
+```javascript
+const App = () => {
+    // ...
+
+    useEffect(() => {
+        noteService
+            .getAll()
+            .then(response => {
+                setNotes(response.data);
+            });
+    }, []);
+
+    const toggleImportanceOf = id => {
+        const note = notes.find(n => n.id === id);
+        const changedNote = { ...note, important: !note.important };
+
+        noteService
+            .update(id, changedNote)
+            .then(response => {
+                setNotes(notes.map(note => note.id !== id ? note : response.data));
+            });
+    };
+
+    const addNote = (event) => {
+        event.preventDefault();
+        const noteObject = {
+            content: newNote,
+            date: new Date().toISOString(),
+            important: Math.random() > 0.5
+        };
+
+        noteService
+            .create(noteObject)
+            .then(response => {
+                setNotes(notes.concat(response.data));
+                setNewNote('');
+            });
+    };
+
+    // ...
+};
+
+export default App;
+```
+- We know that when `App` uses the functions, it receives an object that contains the response for the HTTP request.
+    - We only use `response.data` property of the response object.
+    - Would be nicer if we just get what we needed instead of everything.
+```javascript
+noteService
+    .getAll()
+    .then(initialNotes => {
+        setNotes(initialNotes);
+    });
+```
+- Change the code in the module like so:
+```javascript
+import axios from 'axios';
+const baseUrl = 'http://localhost:3001/notes';
+
+const getAll = () => {
+    const request = axios.get(baseUrl);
+    return request.then(response => response.data);
+};
+
+const create = newObject => {
+    const request = axios.post(baseUrl, newObject);
+    return request.then(response => response.data);
+};
+
+const update = (id, newObject) => {
+    const request = axios.put(`${baseUrl}/${id}`, newObject);
+    return request.then(response => response.data);
+};
+
+export default {
+    getAll: getAll,
+    create: create,
+    update: update
+};
+```
+- We used to return the promise object but now we assign this promise to a variable called `request`.
+- We then call the `then` method of the request.
+- The new modified functions still return a promise because the `then` method of a promise also returns a promise.
+- We define the parameter of `then` to return `response.data` directly.
+    - When HTTP request is successful, the promise returns data sent back in response from the backend.
+- So, update `App` by fixing callback function of `then` method.
+```javascript
+const App = () => {
+    // ...
+
+    useEffect(() => {
+        noteService
+            .getAll()
+            .then(initialNotes => {
+                setNotes(initialNotes);
+            });
+    }, []);
+
+    const toggleImportanceOf = id => {
+        const note = notes.find(n => n.id === id);
+        const changedNote = { ...note, important: !note.important };
+
+        noteService
+            .update(id, changedNote)
+            .then(returnedNote => {
+                setNotes(notes.map(note => note.id !== id ? note : returnedNote));
+            });
+    };
+
+    const addNote = (event) => {
+        event.preventDefault();
+        const noteObject = {
+            content: newNote,
+            date: new Date().toISOString(),
+            important: Math.random() > 0.5
+        };
+
+        noteService
+            .create(noteObject)
+            .then(returnedNote => {
+                setNotes(notes.concat(returnedNote));
+                setNewNote('');
+            });
+    };
+
+    // ...
+};
+```
