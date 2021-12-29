@@ -325,3 +325,77 @@ const App = () => {
     // ...
 };
 ```
+
+## Cleaner Syntax For Defining Object Literals
+- Currently the note related services exports an object with properties assigned to functions for handling notes.
+```javascript
+import axios from 'axios';
+const baseUrl = 'http://localhost:3001/notes';
+
+const getAll = () => {
+    const request = axios.get(baseUrl);
+    return request.then(response => response.data);
+};
+
+const create = newObject => {
+    const request = axios.post(baseUrl, newObject);
+    return request.then(response => response.data);
+};
+
+const update = (id, newObject) => {
+    const request = axios.put(`${baseUrl}/${id}`, newObject);
+    return request.then(response => response.data);
+};
+
+export default {
+    getAll: getAll,
+    create: create,
+    update: update
+};
+```
+- Looking at object that is exported, we see that the keys are the same names as the values.
+    - We can write object definition in a compact way:
+```javascript
+{
+    getAll,
+    create,
+    update
+}
+```
+- Module definition can be simplified further:
+```javascript
+import axios from 'axios';
+const baseUrl = 'http://localhost:3001/notes';
+
+const getAll = () => {
+    const request = axios.get(baseUrl);
+    return request.then(response => response.data);
+};
+
+const create = newObject => {
+    const request = axios.post(baseUrl, newObject);
+    return request.then(response => response.data);
+};
+
+const update = (id, newObject) => {
+    const request = axios.put(`${baseUrl}/${id}`, newObject);
+    return request.then(response => response.data);
+};
+
+export default { getAll, create, update };
+```
+- This is an ES6 way of defining objects using variables in a more compact way.
+- For example:
+```javascript
+const name = 'Leevi';
+const age = 0;
+
+const person = {
+    name: name,
+    age: age
+};
+
+const person = { name, age };
+```
+- The old way is the first object definition.
+- New way is the second.
