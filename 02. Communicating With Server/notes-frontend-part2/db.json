@@ -21,13 +21,13 @@
     {
       "content": "sample note",
       "date": "2021-12-29T18:56:46.161Z",
-      "important": false,
+      "important": true,
       "id": 4
     },
     {
       "content": "sample note",
       "date": "2021-12-29T18:57:31.768Z",
-      "important": true,
+      "important": false,
       "id": 5
     },
     {
@@ -39,7 +39,7 @@
     {
       "content": "sample note",
       "date": "2021-12-29T18:57:33.021Z",
-      "important": true,
+      "important": false,
       "id": 7
     },
     {
