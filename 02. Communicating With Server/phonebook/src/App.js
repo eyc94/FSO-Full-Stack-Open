@@ -28,14 +28,15 @@ const App = () => {
         if (persons.filter(person => person.name.toLowerCase() === newName.toLowerCase()).length > 0) {
             const updateMessage = `${newName} is already added to the phonebook. Replace the old number with the new one?`;
             // Use "if" window.confirm() to confirm update or not.
-            // If confirmed:
-            // Call the update service.
-            // Pass the id.
-            // Pass the newly created object (updated).
-            // Create the new object with object spread and change number.
-            // In the "then" method, update the state to the new object.
-
-            // If not confirmed, don't do anything.
+            if (window.confirm(updateMessage)) {
+                const personToChange = persons.find(p => p.name.toLowerCase() === newName.toLowerCase());
+                const changedPerson = { ...personToChange, number: newNumber };
+                personService
+                    .update(personToChange.id, changedPerson)
+                    .then(returnedPerson => {
+                        setPersons(persons.map(person => person.name.toLowerCase() !== newName.toLowerCase() ? person : returnedPerson));
+                    });
+            }
         } else {
             personService
                 .create(personObject)
