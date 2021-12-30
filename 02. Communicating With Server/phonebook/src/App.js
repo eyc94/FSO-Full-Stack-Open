@@ -50,6 +50,10 @@ const App = () => {
         }
     };
 
+    const updatePerson = (id, newPerson) => {
+
+    };
+
     const handlePersonChange = (event) => {
         setNewName(event.target.value);
     };
