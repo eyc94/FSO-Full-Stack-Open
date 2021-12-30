@@ -26,10 +26,8 @@ const App = () => {
         };
 
         if (persons.filter(person => person.name.toLowerCase() === newName.toLowerCase()).length > 0) {
-            const msg = `${newName} is already added to the phonebook`;
-            window.alert(msg);
+            const updateMessage = `${newName} is already added to the phonebook. Replace the old number with the new one?`;
             // Use "if" window.confirm() to confirm update or not.
-
             // If confirmed:
             // Call the update service.
             // Pass the id.
