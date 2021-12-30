@@ -28,6 +28,15 @@ const App = () => {
         if (persons.filter(person => person.name.toLowerCase() === newName.toLowerCase()).length > 0) {
             const msg = `${newName} is already added to the phonebook`;
             window.alert(msg);
+            // Use "if" window.confirm() to confirm update or not.
+
+            // If confirmed:
+            // Call the update service.
+            // Pass the id.
+            // Pass the newly created object (updated).
+            // In the "then" method, update the state to the new object.
+
+            // If not confirmed, don't do anything.
         } else {
             personService
                 .create(personObject)
