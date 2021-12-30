@@ -34,6 +34,7 @@ const App = () => {
             // Call the update service.
             // Pass the id.
             // Pass the newly created object (updated).
+            // Create the new object with object spread and change number.
             // In the "then" method, update the state to the new object.
 
             // If not confirmed, don't do anything.
