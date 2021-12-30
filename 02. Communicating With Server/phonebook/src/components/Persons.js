@@ -5,7 +5,7 @@ const Persons = (props) => {
     return (
         <>
             {props.persons.map(person =>
-                <Person key={person.name} name={person.name} number={person.number} />
+                <Person delPerson={() => props.delPerson(person.id)} key={person.name} name={person.name} number={person.number} />
             )}
         </>
     )

@@ -39,6 +39,14 @@ const App = () => {
         setNewNumber('');
     };
 
+    const delPerson = (id) => {
+        personService
+            .del(id)
+            .then(response => {
+                setPersons(persons.filter(person => person.id !== id));
+            });
+    };
+
     const handlePersonChange = (event) => {
         setNewName(event.target.value);
     };
@@ -68,7 +76,7 @@ const App = () => {
                 numChangeHandler={handleNumberChange}
             />
             <h2>Numbers</h2>
-            <Persons persons={personsToShow} />
+            <Persons delPerson={delPerson} persons={personsToShow} />
         </div>
     )
 };
