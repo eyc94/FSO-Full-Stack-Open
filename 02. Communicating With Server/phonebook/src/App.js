@@ -39,12 +39,15 @@ const App = () => {
         setNewNumber('');
     };
 
-    const delPerson = (id) => {
-        personService
-            .del(id)
-            .then(response => {
-                setPersons(persons.filter(person => person.id !== id));
-            });
+    const delPerson = (id, name) => {
+        const delMessage = `Delete ${name}?`;
+        if (window.confirm(delMessage)) {
+            personService
+                .del(id)
+                .then(response => {
+                    setPersons(persons.filter(person => person.id !== id));
+                });
+        }
     };
 
     const handlePersonChange = (event) => {
