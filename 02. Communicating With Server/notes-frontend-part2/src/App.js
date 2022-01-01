@@ -46,9 +46,12 @@ const App = () => {
                 setNotes(notes.map(note => note.id !== id ? note : returnedNote));
             })
             .catch(error => {
-                alert(
-                    `The note '${note.content}' was already deleted from the server.`
+                setErrorMessage(
+                    `Note ${note.content} was already removed from the server.`
                 );
+                setTimeout(() => {
+                    setErrorMessage(null);
+                }, 5000);
                 setNotes(notes.filter(n => n.id !== id));
             });
     };
