@@ -162,3 +162,72 @@ const toggleImportanceOf = id => {
 - At the same time, a timer is started.
     - This sets `errorMessage` state to `null` after five seconds.
 
+## Inline Styles
+- Can write styles directly in code.
+    - This is called `inline styles`.
+- Any component can be given a set of CSS properties as a JS object through the `style` attribute.
+- CSS rules defined differently in JS than in normal CSS.
+    - Say I wanted to give an element a color green and italic font 16 pixels in size.
+- This is what it looks like in CSS:
+```css
+{
+    color: green;
+    font-style: italic;
+    font-size: 16px;
+}
+```
+- This is what it looks like as a React inline style object:
+```javascript
+{
+    color: 'green',
+    fontStyle: 'italic',
+    fontSize: 16
+}
+```
+- Every CSS property is a separate property of JS object.
+- Numeric is integers.
+- Notice the hyphenated words turn to camelCase.
+- Add bottom block to app by creating a `Footer` component:
+```javascript
+const Footer = () => {
+    const footerStyle = {
+        color: 'green',
+        fontStyle: 'italic',
+        fontSize: 16
+    };
+    return (
+        <div style={footerStyle}>
+            <br />
+            <em>Note app, Eric Chin 2022</em>
+        </div>
+    )
+};
+
+const App = () => {
+    // ...
+
+    return (
+        <div>
+            <h1>Notes</h1>
+
+            <Notification message={errorMessage} />
+
+            // ...
+
+            <Footer />
+        </div>
+    )
+};
+```
+- Limitations with inline styles.
+    - `pseudo-classes` can't be used straightforwardly.
+- Goes against the grain of old conventions.
+    - Best practice to separate CSS from content (HTML) and functionality (JS).
+    - Write them in separate files.
+- Philosophy of React is the opposite of this.
+    - Separation of CSS, HTML and JS does not scale well in larger apps.
+    - React bases division of application along the lines of its logical functional entities.
+- Structural units making up application's functional entities are React components.
+    - Component defines HTML for structuring content, the JS functions for determining functionality, and also component's styling.
+    - All in one place.
+    - This is to make components independent and reusable.
