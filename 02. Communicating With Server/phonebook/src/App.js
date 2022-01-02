@@ -37,6 +37,9 @@ const App = () => {
                     .update(personToChange.id, changedPerson)
                     .then(returnedPerson => {
                         setPersons(persons.map(person => person.name.toLowerCase() !== newName.toLowerCase() ? person : returnedPerson));
+                    })
+                    .catch(error => {
+
                     });
             }
         } else {
@@ -84,7 +87,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <Notification message={successMessage} />
+            <Notification message={successMessage} result="success" />
             <Filter filterName={filterName} changeHandler={handleFilterChange} />
             <h2>Add New</h2>
             <PersonForm
