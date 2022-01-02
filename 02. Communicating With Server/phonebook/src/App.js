@@ -10,7 +10,7 @@ const App = () => {
     const [newName, setNewName] = useState('');
     const [newNumber, setNewNumber] = useState('');
     const [filterName, setFilterName] = useState('');
-    const [message, setMessage] = useState('this is a message...');
+    const [successMessage, setSuccessMessage] = useState('Added!');
 
     useEffect(() => {
         personService
@@ -80,7 +80,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <Notification message={message} />
+            <Notification message={successMessage} />
             <Filter filterName={filterName} changeHandler={handleFilterChange} />
             <h2>Add New</h2>
             <PersonForm
