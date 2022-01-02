@@ -10,7 +10,7 @@ const App = () => {
     const [newName, setNewName] = useState('');
     const [newNumber, setNewNumber] = useState('');
     const [filterName, setFilterName] = useState('');
-    const [successMessage, setSuccessMessage] = useState('Added!');
+    const [successMessage, setSuccessMessage] = useState(null);
 
     useEffect(() => {
         personService
@@ -46,6 +46,10 @@ const App = () => {
                     setPersons(persons.concat(returnedPerson));
                 });
         }
+        setSuccessMessage(`Added ${newName}`);
+        setTimeout(() => {
+            setSuccessMessage(null);
+        }, 5000);
         setNewName('');
         setNewNumber('');
     };
