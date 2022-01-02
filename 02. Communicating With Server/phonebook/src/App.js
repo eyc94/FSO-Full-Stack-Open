@@ -10,7 +10,8 @@ const App = () => {
     const [newName, setNewName] = useState('');
     const [newNumber, setNewNumber] = useState('');
     const [filterName, setFilterName] = useState('');
-    const [successMessage, setSuccessMessage] = useState(null);
+    const [message, setMessage] = useState(null);
+    const [result, setResult] = useState('error');
 
     useEffect(() => {
         personService
@@ -37,6 +38,11 @@ const App = () => {
                     .update(personToChange.id, changedPerson)
                     .then(returnedPerson => {
                         setPersons(persons.map(person => person.name.toLowerCase() !== newName.toLowerCase() ? person : returnedPerson));
+                    })
+                    .catch(error => {
+                        setMessage(`Information of ${newName} has already been removed from the server.`);
+                        setPersons(persons.filter(p => p.name.toLowerCase() !== newName));
+                        setResult('error');
                     });
             }
         } else {
@@ -46,10 +52,11 @@ const App = () => {
                     setPersons(persons.concat(returnedPerson));
                 });
         }
-        setSuccessMessage(`Added ${newName}`);
+        setMessage(`Added ${newName}`);
         setTimeout(() => {
-            setSuccessMessage(null);
+            setMessage(null);
         }, 5000);
+        setResult('success');
         setNewName('');
         setNewNumber('');
     };
@@ -84,7 +91,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <Notification message={successMessage} />
+            <Notification message={message} result={result} />
             <Filter filterName={filterName} changeHandler={handleFilterChange} />
             <h2>Add New</h2>
             <PersonForm
