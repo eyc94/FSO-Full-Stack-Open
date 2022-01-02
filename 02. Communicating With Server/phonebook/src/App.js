@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import Notification from './components/Notification';
 import personService from './services/persons';
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
     const [newName, setNewName] = useState('');
     const [newNumber, setNewNumber] = useState('');
     const [filterName, setFilterName] = useState('');
+    const [successMessage, setSuccessMessage] = useState(null);
 
     useEffect(() => {
         personService
@@ -44,6 +46,10 @@ const App = () => {
                     setPersons(persons.concat(returnedPerson));
                 });
         }
+        setSuccessMessage(`Added ${newName}`);
+        setTimeout(() => {
+            setSuccessMessage(null);
+        }, 5000);
         setNewName('');
         setNewNumber('');
     };
@@ -78,6 +84,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={successMessage} />
             <Filter filterName={filterName} changeHandler={handleFilterChange} />
             <h2>Add New</h2>
             <PersonForm
