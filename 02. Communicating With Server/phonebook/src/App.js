@@ -93,7 +93,7 @@ const App = () => {
             <h2>Phonebook</h2>
             <Notification message={message} result={result} />
             <Filter filterName={filterName} changeHandler={handleFilterChange} />
-            <h2>Add New</h2>
+            <h2>Add New Person</h2>
             <PersonForm
                 submitHandler={addPerson}
                 nameValue={newName}
