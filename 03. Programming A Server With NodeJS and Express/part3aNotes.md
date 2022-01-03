@@ -245,3 +245,52 @@ response.end(JSON.stringify(notes));
 - No longer necessary with express because it happens automatically.
 - `JSON` is a string NOT a JS object like the value assigned to `notes`.
 
+## nodemon
+- Making changes to app code requires restarting application to see changes.
+    - This is cumbersome.
+- Solution is `nodemon`.
+    - **nodemon will watch the files in the directory in which nodemon was started, and if any files change, nodemon will automatically restart your node application.**
+- Install `nodemon` as development dependency:
+```
+npm install --save-dev nodemon
+```
+- Contents of `package.json` also changed:
+```json
+{
+    // ...
+    "dependencies": {
+        "express": "^4.17.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.7"
+    }
+}
+```
+- You can manually change from dependencies to devDependencies if you made a mistake on installation.
+- `devDependencies` not needed when app is run on production mode on the production server (Heroku).
+- Start application with `nodemon`:
+```
+node_modules/.bin/nodemon index.js
+```
+- Changes to app causes server to restart automatically.
+- Backend server automatically restarts but still need to refresh browser.
+    - Unlike React, we don't have `hot reload` function to reload browser.
+- Command is long, so create a script.
+```json
+{
+    // ...
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    // ...
+}
+```
+- No need to specify `node_modules/.bin/nodemon` because `npm` automatically knows to search for the file from that directory.
+- Start server in development mode with:
+```
+npm run dev
+```
+- Unlike `start` and `test` scripts, we have to add `run` to command.
+
