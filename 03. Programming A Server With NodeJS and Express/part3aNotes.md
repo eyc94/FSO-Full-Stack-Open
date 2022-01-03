@@ -180,3 +180,68 @@ npm install
 ```
 - If `major` number of version does not change, newer versions should be `backwards compatible`.
 - Future versions with 4 as the major number would still work with our version right now.
+
+## Web and Express
+- Go back to application and make changes:
+```javascript
+const express = require('express');
+const app = express();
+
+let notes = [
+    ...
+]
+
+app.get('/', (request, response) => {
+    response.send('<h1>Hello World!</h1>');
+});
+
+app.get('/api/notes', (request, response) => {
+    response.json(notes);
+});
+
+const PORT = 3001;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+```
+- Restart app.
+- We import `express`.
+    - This is a function used to create an express app.
+    - Store this in `app` variable.
+```javascript
+const express = require('express');
+const app = express();
+```
+- There are two routes to the app.
+- The first one defines event handler used to handle HTTP GET requests make to app's root.
+```javascript
+app.get('/', (request, response) => {
+    response.send('<h1>Hello World!</h1>');
+});
+```
+- Event handler gets 2 parameters.
+    - First is the `request` parameter. It contains all information of the HTTP request.
+    - Second is the `response` parameter. Defines how the request is responded to.
+- Request is answered by using `send` method of `response` object.
+    - Server responds to request by sending a response containing string `<h1>Hello World</h1>` passed to the `send` method.
+    - Parameter is a string.
+    - Express automatically sets value of `Content-Type` header to `text/html`.
+    - Status code defaults to 200.
+    - Verify in `Network` tab.
+- Second route defines an event handler that handles HTTP GET requests made to `notes` path:
+```javascript
+app.get('/api/notes', (request, response) => {
+    response.json(notes);
+});
+```
+- Request responded to with `json` method of `response` object.
+    - Calling this sends the `notes` array passed to it as a JSON formatted string.
+    - Express automatically sets `Content-Type` header with value `application/json`.
+- Take a look at data sent in JSON format.
+- Earlier we had to transform data into JSON format with `JSON.stringify` method.
+```javascript
+response.end(JSON.stringify(notes));
+```
+- No longer necessary with express because it happens automatically.
+- `JSON` is a string NOT a JS object like the value assigned to `notes`.
+
