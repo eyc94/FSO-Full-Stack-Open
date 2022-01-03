@@ -294,3 +294,22 @@ npm run dev
 ```
 - Unlike `start` and `test` scripts, we have to add `run` to command.
 
+## REST
+- Expand app to provide same RESTful HTTP API as `json-server`.
+- REST (Representation State Transfer).
+    - Architectural style meant for building scalable web apps.
+- We are only concerned with how RESTful APIs are typically understood in web apps.
+    - Original definition of REST is not limited to web apps.
+- Remember that singular things, like notes, are `resources`.
+    - Each resource has a unique URL.
+    - Usually with resource type and id.
+- Assume root URL of our service is `www.example.com/api`.
+    - Define resource type of note to be `notes`.
+    - Address of note with id of 10 is: `www.example.com/api/notes/10`.
+    - Address for all notes is: `www.example.com/api/notes`.
+- We can execute different operations on resources defined by the HTTP `verb`.
+- This is what is called a `uniform interface`.
+    - Consistent way of defining interfaces that makes it possible for systems to co-operate.
+- Our model is good for a straightforward CRUD API.
+    - Referred to as `resource oriented architecture` instead of REST.
+
