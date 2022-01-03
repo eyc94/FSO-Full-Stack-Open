@@ -143,3 +143,40 @@ console.log(`Server running on port ${PORT}`);
 - The `application/json` value of `Content-Type` header tells receiver that data is in JSON format.
 - `notes` array transforms into JSON with `JSON.stringify(notes)` method.
 - Opening browser displays the same format like before when we used `json-server` to serve the notes.
+
+## Express
+- What we did above implementing server code directly with Node's built-in `http` web server is cumbersome.
+    - When app grows larger, it's tougher.
+- Many libraries to make server side development with Node easier.
+    - Pleasing interface to work with http module.
+    - Provides better abstraction.
+    - Most popular library is `express`.
+- Install express:
+```
+npm install express
+```
+- Dependency is then added to `package.json`:
+```json
+{
+    // ...
+    "dependencies": {
+        "express": "^4.17.1"
+    }
+}
+```
+- The code for dependencies is found in `node_modules` folder in the root.
+- What does the caret mean in front of the version number of express?
+    - Versioning model in npm is called `semantic versioning`.
+    - Caret means that when dependency is updated, version of express will be at least 4.17.1.
+    - Installed version can have a larger `patch` number (last digit), or a larger `minor` number (middle digit).
+    - The `major` number (first digit) must be the same.
+- Update dependencies with:
+```
+npm update
+```
+- If working on another computer, we can install all dependencies with the `package.json` file with the command:
+```
+npm install
+```
+- If `major` number of version does not change, newer versions should be `backwards compatible`.
+- Future versions with 4 as the major number would still work with our version right now.
