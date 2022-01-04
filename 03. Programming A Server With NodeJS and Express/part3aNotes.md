@@ -438,3 +438,8 @@ app.delete('/api/notes/:id', (request, response) => {
 GET http://localhost:3001/api/notes
 ```
 - Click `Send Request` and REST client executes the HTTP request and response from server is opened in the editor.
+
+## The WebStorm HTTP Client
+- If you use `IntelliJ WebStorm`, there is a similar process with its builtin HTTP Client.
+- Create new file with extension `.rest` and editor will display options to create and run requests.
+
