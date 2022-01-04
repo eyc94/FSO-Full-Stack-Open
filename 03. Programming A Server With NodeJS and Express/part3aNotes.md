@@ -429,3 +429,12 @@ app.delete('/api/notes/:id', (request, response) => {
 - Make GET request to notes and verify deletion of note.
 - Notes are only saved to memory so restarting application returns notes to original state.
 
+## The Visual Studio Code REST Client
+- If you use Visual Studio Code, you can use VSCode `REST client` instead.
+- Once plugin installed, make folder at root named `requests`.
+    - Save all REST client requests in the folder as files ending with `.rest` extension.
+- Create a new `get_all_notes.rest` file and define request that fetches all notes.
+```rest
+GET http://localhost:3001/api/notes
+```
+- Click `Send Request` and REST client executes the HTTP request and response from server is opened in the editor.
