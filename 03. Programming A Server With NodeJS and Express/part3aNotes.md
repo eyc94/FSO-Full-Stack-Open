@@ -418,3 +418,14 @@ app.delete('/api/notes/:id', (request, response) => {
     - Only 2 options are 204 and 404.
     - For simplicity's sake, use 204 in both cases.
 
+## Postman
+- How do we test delete operation?
+- HTTP GET requests are easy to make from browser.
+- Many tools to test backends easier.
+    - Command line program `curl`.
+    - We instead use `Postman` for testing the application.
+- Install `Postman` and try it.
+- Define URL and select DELETE request type.
+- Make GET request to notes and verify deletion of note.
+- Notes are only saved to memory so restarting application returns notes to original state.
+
