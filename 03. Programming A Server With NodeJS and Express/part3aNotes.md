@@ -313,3 +313,92 @@ npm run dev
 - Our model is good for a straightforward CRUD API.
     - Referred to as `resource oriented architecture` instead of REST.
 
+## Fetching A Single Resource
+- Expand app to offer REST interface for operating on individual notes.
+- Create `route` for fetching single resource.
+- Unique address is of form `notes/10` where 10 is the id.
+    - Define `parameters` in express using colon syntax.
+```javascript
+app.get('/api/notes/:id', (request, response) => {
+    const id = request.params.id;
+    const note = notes.find(note => note.id === id);
+    response.json(notes);
+});
+```
+- The route above handles all HTTP GET requests of the form `/api/notes/SOMETHING`, where `SOMETHING` is a string.
+- `id` parameter in the route of request can be accessed through the `request` object.
+```javascript
+const id = request.params.id;
+```
+- `find` method of arrays to find the note with the matching id.
+- The note is returned to sender of request.
+- Going to `http://localhost:3001/api/notes/1` displays an empty page.
+    - Add `console.log` commands to figure out why.
+```javascript
+app.get('/api/notes/:id', (request, response) => {
+    const id = request.params.id;
+    console.log(id);
+    const note = notes.find(note => note.id === id);
+    console.log(note);
+    response.json(notes);
+});
+```
+- Notice that `find` method does not find a matching note.
+- Add `console.log` inside comparison function passed `find` method.
+```javascript
+app.get('/api/notes/:id', (request, response) => {
+    const id = request.params.id;
+    console.log(id);
+    const note = notes.find(note => {
+        console.log(note.id, typeof note.id, id, typeof id, note.id === id);
+        return note.id === id;
+    });
+    console.log(note);
+    response.json(notes);
+});
+```
+- Visit URL again.
+- This is printed:
+```
+1 'number' '1' 'string' false
+2 'number' '2' 'string' false
+3 'number' '3' 'string' false
+```
+- `id` variable is a string where the ids of notes are integers.
+    - The triple equals considers all values of different types to not be equal by default.
+    - This means 1 is not '1'.
+- Fix by changing id parameter from string to `number`.
+```javascript
+app.get('/api/notes/:id', (request, response) => {
+    const id = Number(request.params.id);
+    const note = notes.find(note => note.id === id);
+    response.json(notes);
+});
+```
+- Fetching now works.
+- Another problem is searching for a note with an id that does not exist.
+    - Server responds with status code 200 OK.
+    - However, no data is sent back.
+    - Reason is `note` variable is set to `undefined` if no matching note is found.
+    - Handle on server in a better way.
+    - If no note is found, respond with status code `404 not found`.
+```javascript
+app.get('/api/notes/:id', (request, response) => {
+    const id = Number(request.params.id);
+    const note = notes.find(note => note.id === id);
+
+    if (note) {
+        response.json(note);
+    } else {
+        response.status(404).end();
+    }
+});
+```
+- No data is attached to response.
+    - Use `status` method to set status.
+    - Use `end` method to respond to request without sending data.
+- The 'if' statement uses the fact that JS objects are truthy.
+    - An `undefined` object is falsy evaluating to false.
+- However, notice nothing is really displayed indicating a 404 error.
+    - This is okay because REST APIs are interfaces for programmatic use.
+
