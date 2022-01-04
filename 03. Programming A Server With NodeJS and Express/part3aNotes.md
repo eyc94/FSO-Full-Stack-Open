@@ -402,3 +402,19 @@ app.get('/api/notes/:id', (request, response) => {
 - However, notice nothing is really displayed indicating a 404 error.
     - This is okay because REST APIs are interfaces for programmatic use.
 
+## Deleting Resources
+- Implement route for deleting resources.
+- Done with HTTP DELETE request to URL of resource.
+```javascript
+app.delete('/api/notes/:id', (request, response) => {
+    const id = Number(request.params.id);
+    notes = notes.filter(note => note.id !== id);
+
+    response.status(204).end();
+});
+```
+- Successful deletion means we respond to request with status code `204 no content` and return no data with the response.
+    - No consensus on what status code is returned with DELETE request if resource does not exist.
+    - Only 2 options are 204 and 404.
+    - For simplicity's sake, use 204 in both cases.
+
