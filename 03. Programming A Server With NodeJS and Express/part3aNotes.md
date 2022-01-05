@@ -594,3 +594,43 @@ Math.max(...notes.map(n => n.id))
 - Like safety in that idempotence is just a standard.
 - POST is neither safe nor idempotent.
 
+## Middleware
+- `json-parser` is a middleware.
+- Middlewares are functions used to handle `request` and `response` objects.
+- `json-parser`:
+    - Takes raw data from requests stored in `request` object.
+    - Parses to JS object.
+    - Assigns it to the `request` object as a new property `body`.
+- Can use more than 1 middleware.
+    - They are executed in the order they are written in express.
+- Implement our own middleware that prints info about every request sent to the server.
+- Middleware is a function that receives 3 parameters:
+```javascript
+const requestLogger = (request, response, next) => {
+    console.log('Method:', request.method);
+    console.log('Path:  ', request.path);
+    console.log('Body:  ', request.body);
+    console.log('---');
+    next();
+};
+```
+- The `next()` function yields control to the next middleware.
+- Use middleware like this:
+```javascript
+app.use(requestLogger);
+```
+- Notice `json-parser` is used before `requestLogger` middleware.
+    - Otherwise, `request.body` will not be initialized before being printed.
+- Middleware functions must be taken to use before routes.
+    - Times where we can define middleware after routes.
+    - Basically means that we are defining middleware functions that are only called if no route handles the HTTP request.
+- Add the following middleware after routes.
+    - Used for catching requests made to non-existent routes.
+    - It will return an error message in JSON format.
+```javascript
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' });
+};
+
+app.use(unknownEndpoint);
+```
