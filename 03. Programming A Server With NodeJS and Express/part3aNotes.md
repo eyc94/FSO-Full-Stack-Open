@@ -1,5 +1,5 @@
-**NOTE: See FSO-Notes-Backend to follow along!**
-**NOTE: See FSO-Phonebook-Backend for exercises!**
+- **NOTE: See FSO-Notes-Backend to follow along!**
+- **NOTE: See FSO-Phonebook-Backend for exercises!**
 
 # Node.js and Express
 - Shift focus to backend.
