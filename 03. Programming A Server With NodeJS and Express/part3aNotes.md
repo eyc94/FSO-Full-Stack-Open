@@ -571,3 +571,26 @@ Math.max(...notes.map(n => n.id))
 - `Math.max()` returns the max values of all numbers passed to it.
     - However, `notes.map(n => n.id)` is an `array` so it cannot be passed directly as a parameter to `Math.max()`.
     - Array can be transformed into individual members by using the spread syntax `...`.
+
+## About HTTP Request Types
+- HTTP standard talks about 2 properties related to request types:
+    1. **Safety**
+    2. **Idempotence**
+- HTTP GET requests should be *safe*:
+    - **In particular, the convention has been established that the GET and HEAD methods SHOULD NOT have the significance of taking an action other than retrieval. These methods ought to be considered "safe".**
+- Safety means executing request does not produce `side-effects` in server.
+    - State of database must not change as a result of a request.
+    - Response must only return data already existing in server.
+- Nothing guarantees GET request is safe.
+    - Just a recommendation.
+    - Following RESTful principles in our API makes it safe.
+- HTTP standard also defines request type `HEAD` that ought to be safe.
+    - Works like GET but only returns status code and response headers.
+    - Response body not returned when making HEAD request.
+- HTTP requests except POST should be *idempotent*:
+    - **Methods can also have the property of "idempotence" in that (aside from error or expiration issues) the side-effects of N > 0 identical requests is the same as for a single request. The methods GET, HEAD, PUT and DELETE share this property.**
+- If request has side-effects, result should be same regardless of how many times the request is sent.
+- Making PUT request to `/api/notes/10` and with request we send data `{ content: "no side effects!", important: true }` makes result same regardless of how many times we send the request.
+- Like safety in that idempotence is just a standard.
+- POST is neither safe nor idempotent.
+
