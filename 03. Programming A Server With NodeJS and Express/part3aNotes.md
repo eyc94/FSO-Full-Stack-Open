@@ -1,6 +1,7 @@
-# Node.js and Express
-**NOTE: Created a different repo (FSO-Notes-Backend) to follow along!**
+**NOTE: See FSO-Notes-Backend to follow along!**
+**NOTE: See FSO-Phonebook-Backend for exercises!**
 
+# Node.js and Express
 - Shift focus to backend.
     - Implement functionality on server side of stack.
 - Build backend on top of `NodeJS`.
