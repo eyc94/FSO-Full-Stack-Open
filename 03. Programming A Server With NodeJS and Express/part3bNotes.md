@@ -104,4 +104,20 @@ $ brew install heroku/brew/heroku
 ```
 - Now you can use the `heroku` command from terminal.
 - Use `heroku login` to log into Heroku CLI.
+- There are some more steps but it's explained above. Move on for now.
+
+## Frontend Production Build
+- We have been running React code in `development mode`.
+    - App is configured to give error messages.
+    - Immediately renders changes to browser, etc.
+- When app is deployed, we need to create a `production build`.
+    - Version of app optimized for production.
+- Apps created with `create-react-app` can use `npm run build` to create a production build of an app.
+- Run `npm run build` from the frontend project root.
+    - This creates folder called `build`.
+    - Inside contains only HTML file called `index.html`.
+    - It also contains folder called `static`.
+    - `Minified` version of our app's JS code is generated and stored in `static` folder.
+        - JS code minified into one file.
+        - Minified code is not very readable.
 
