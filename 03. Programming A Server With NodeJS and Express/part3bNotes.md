@@ -89,4 +89,19 @@ node_modules
     - Change the `baseUrl` on the frontend to be the address of the Heroku app.
 - So, how do we deploy frontend to the internet now?
     - Multiple options.
+- Before we move on, the next subsection is some notes on Heroku.
+
+### Heroku
+- Create a free account.
+- Have `Node.js` and `npm` installed locally.
+- Heroku CLI requires `Git`, so you need to install Git as well.
+- Download and run installer on your platform:
+- For Mac:
+    - You can install via `Homebrew`:
+    - Run the command below:
+```
+$ brew install heroku/brew/heroku
+```
+- Now you can use the `heroku` command from terminal.
+- Use `heroku login` to log into Heroku CLI.
 
