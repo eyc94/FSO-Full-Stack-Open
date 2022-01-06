@@ -56,3 +56,37 @@ app.use(cors());
 - The setup is now summarized as follows:
     - The React app that runs in the browser now fetches the data from the node/express-server that runs in localhost:3001.
 
+## Application To The Internet
+- The whole stack is ready!
+- Move app to the internet now.
+    - Use `Heroku` for this.
+    - Instructions on Heroku: `https://devcenter.heroku.com/articles/getting-started-with-nodejs`
+- Add a file called `Procfile` to the backend project's root.
+    - Tells Heroku how to start application.
+```
+web: npm start
+```
+- Change definition of the port app uses in `index.js`:
+```javascript
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+```
+- Either use port defined in `environment variable` called `PORT` or port 3001 if `PORT` is undefined.
+- Create Git repo in project directory.
+    - Add `.gitignore` with the following:
+```
+node_modules
+```
+- Create Heroku app with `heroku create` command.
+- Commit code to repo.
+- Move it to Heroku with `git push heroku main`.
+- App should now work and display all notes if went well.
+- If not, check Heroku logs to see why by typing `heroku logs`.
+    - Best to do `heroku logs -t`.
+- Frontend should also work.
+    - Change the `baseUrl` on the frontend to be the address of the Heroku app.
+- So, how do we deploy frontend to the internet now?
+    - Multiple options.
+
