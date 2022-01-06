@@ -182,3 +182,14 @@ const getAll = () => {
     - Causes browser to fetch product version of the React app.
     - Once it runs, it fetches json-data from the address localhost:3001/api/notes.
 
+## The Whole App To Internet
+- After production version of app works locally, commit production build of frontend to backend repo.
+- Push code to Heroku again.
+- App now works but the changing importance does NOT.
+- App saves notes to a variable. If app crashes or restarts, it's all gone.
+- App needs a database.
+- Before introducing database, review summary of setup:
+    - The node/express-backend now resides in Heroku server.
+    - When root address `https://<app_name>.herokuapp.com/` is accessed, browser loads and executes React app.
+    - React app fetches json-data from Heroku server.
+
