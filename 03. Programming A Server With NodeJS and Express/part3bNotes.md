@@ -121,3 +121,64 @@ $ brew install heroku/brew/heroku
         - JS code minified into one file.
         - Minified code is not very readable.
 
+## Serving Static Files From The Backend
+- One way to deploy frontend.
+    - Copy production build (the `build` folder) to root of backend repo.
+    - Configure backend to show frontend's main page (the `build/index.html`).
+- Copy the production build of frontend to root of backend.
+```
+cp -r <path_to_build> <path_to_backend_root>
+```
+- Can just copy and paste too.
+- The backend directory should have the build folder now.
+- To make express show `static content` (`index.html` and the JS, etc), need built-in middleware from express called `static`.
+- Add the following:
+```javascript
+app.use(express.static('build'));
+```
+- Basically, whenever express gets an HTTP GET request, it first checks if the `build` folder has the file corresponding to request's address.
+    - If correct file is found, express will return it.
+- HTTP GET requests to `www.serveraddress.com/index.html` or `www.serveraddress.com` will show the React frontend.
+    - GET requests to `www.serveraddress.com/api/notes` will be handled by the backend's code.
+- Both frontend and backend are at same address.
+    - Declare `baseUrl` as a `relative` URL.
+    - So, leave out part declaring the server.
+```javascript
+import axios from 'axios';
+const baseUrl = '/api/notes';
+
+const getAll = () => {
+    const request = axios.get(baseUrl);
+    return request.then(response => response.data);
+};
+
+// ...
+```
+- After this change, create a new production build.
+- Copy build to root of backend repo.
+- App can now also be used from the backend address `http://localhost:3001`.
+- App now works like part 0's `single-page app`.
+- When we use browser to go to `http://localhost:3001`, server returns `index.html` from `build` folder.
+- Summarized below:
+```html
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>React App</title>
+    <link href="/static/css/main.f9a47af2.chunk.css" rel="stylesheet">
+</head>
+<body>
+    <div id="root"></div>
+    <script src="/static/js/1.578f4ea1.chunk.js"></script>
+    <script src="/static/js/main.104ca08d.chunk.js"></script>
+</body>
+</html>
+```
+- We see 1 CSS stylesheet and 2 JS script tags.
+- React code fetches notes from `http://localhost:3001/api/notes` and renders them.
+- A summary of the setup is:
+    - Everything is now in the same node/express-backend that runs in localhost:3001.
+    - When browser goes to the page, `index.html` is rendered.
+    - Causes browser to fetch product version of the React app.
+    - Once it runs, it fetches json-data from the address localhost:3001/api/notes.
+
