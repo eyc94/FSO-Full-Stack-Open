@@ -31,3 +31,28 @@ useEffect(() => {
     - We can access this backend from the browser and Postman without a problem.
     - The error in the console seems to be a CORS related issue.
 
+## Same Origin Policy and CORS
+- Issue above lies in `CORS`, or `Cross-Origin Resource Sharing`.
+    - **Cross-origin resource sharing (CORS) is a mechanism that allows restricted resources (e.g. fonts) on a web page to be requested from another domain from which the first resource was served. A web page may freely embed cross-origin images, stylesheets, scripts, iframes, and videos. Certain "cross-domain" requests, notably Ajax requests, are forbidden by default by the same-origin security policy.**
+- Basically, what is happening is that the JS code of an app running in the browser can only communicate with a server in the same `origin`.
+    - Originally, this is `json-server`.
+- Our server is in localhost port 3001.
+- Frontend is in localhost port 3000.
+- So, they do NOT have the same origin.
+- CORS is a universal principle of operations of a web application.
+- Can allow requests from other origins using Node's `cors` middleware.
+- Install cors in backend repo:
+```
+npm install cors
+```
+- Use middleware and allow requests from all origins:
+```javascript
+const cors = require('cors');
+
+app.use(cors());
+```
+- Now, the frontend works!
+- Changing importance of notes has not been implemented yet to the backend.
+- The setup is now summarized as follows:
+    - The React app that runs in the browser now fetches the data from the node/express-server that runs in localhost:3001.
+
