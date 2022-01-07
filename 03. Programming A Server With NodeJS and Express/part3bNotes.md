@@ -216,3 +216,35 @@ const getAll = () => {
     - Contains the git commands to update the backend repo.
 - `npm run logs:prod` shows the Heroku logs.
 
+## Proxy
+- Changes on frontend made it not work in dev mode (started with `npm start`).
+    - Connection to backend does not work because we changed `baseUrl` to a relative one.
+```javascript
+const baseUrl = '/api/notes';
+```
+- In dev mode, frontend is at the address `localhost:3000`.
+- Requests made to backend go to the wrong address then: `http://localhost:3000/api/notes`.
+    - The backend is actually at port 3001.
+- If frontend was created with `create-react-app`, it's easy to solve.
+    - Make the following declaration in `package.json` of the frontend repo:
+```json
+{
+    "dependencies": {
+        // ...
+    },
+    "scripts": {
+        // ...
+    },
+    "proxy": "http://localhost:3001"
+}
+```
+- After restarting, the React dev environment will work as a `proxy`.
+- If React code does an HTTP request to a server address at `http://localhost:3000` not managed by the React app itself (when requests are not about fetching CSS or JS of app), the request will be redirected to server at `http://localhost:3001`.
+- Now frontend is fine.
+    - Working in dev mode and production mode.
+- So, you see how annoying it is to keep making a new production build and copying it over every time you make a change in the frontend.
+    - This makes creating an automated `deployment pipeline` very difficult.
+- We can place both the frontend and backend into the same repo.
+    - We won't go into this now.
+- Can also deploy frontend code as its own app.
+    - Apps created with `create-react-app` is straightforward.
