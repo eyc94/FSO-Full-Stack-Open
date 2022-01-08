@@ -28,3 +28,34 @@ node --inspect index.js
 - Be systematic and question everything about where the bug may be.
 - Stop and fix before proceeding!
 
+## MongoDB
+- Need a DB to store notes indefinitely.
+- Most DBs that we are familiar with are relation DBs.
+- We will use `MongoDB` which is a `document database`.
+- Relational and document databases are different.
+    - Organize data differently.
+    - Support different query languages.
+- Document databases are categorized under the `NoSQL` umbrella term.
+- Read chapters on `collections` and `documents` to get a better idea on how a document database stores data.
+    - Collections: `docs.mongodb.com/manual/core/databases-and-collections/`
+    - Documents: `docs.mongodb.com/manual/core/document/`
+- You can install and run MongoDB locally.
+    - We will, however, use Mongo database service.
+    - Preferred is `MongoDB Atlas`.
+- After creating and logging into account, Atlas recommends creating cluster.
+    - In latest versions of Atlas, you may see create a database.
+- Choose `AWS` as the provider and a region you're close to.
+- Create cluster.
+- Do not continue before cluster is ready.
+- Let's create credentials for app to connect to the database.
+    - Click `Database Access` tab.
+    - Grant user with permissions to read and write to any database.
+- Define the IP addresses that are allowed access to database.
+    - All access from anywhere.
+- Click `Connect` and choose `Connect your application`.
+- You will see the `MongoDB URI`.
+    - This is the address of the database that we will supply to the MongoDB client library we will add to our app.
+    - Looks like this:
+```
+mongodb+srv://fullstack:<PASSWORD>@<CLUSTER_NAME>.mongodb.net/test?retryWrites=true
+```
