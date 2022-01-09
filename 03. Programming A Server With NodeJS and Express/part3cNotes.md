@@ -146,3 +146,32 @@ const Note = mongoose.model('Note', noteSchema);
     - Can store documents with different fields in the same collection.
 - Idea of Mongoose is that the data in the DB is given a `schema at the level of the application` that defines the shape of the documents stored in any given collection.
 
+## Creating and Saving Objects
+- App creates new object with the `Note` model:
+```javascript
+const note = new Note({
+    content: 'HTML is Easy',
+    date: new Date(),
+    important: false
+});
+```
+- Models are `constructor functions`.
+    - Create new JS objects based on parameters.
+    - These objects have the properties of the model.
+    - They also have the method for saving the object to the DB.
+- Save object to DB with `save` method.
+    - Provided with event handler with the `then` method.
+```javascript
+note.save().then(result => {
+    console.log('note saved!');
+    mongoose.connection.close();
+});
+```
+- When object is saved to DB, event handler provided to `then` gets executed.
+    - Closes connection to database.
+    - If connection is not closed, the program will never finish executing.
+- The result of the save operation is in `result` parameter.
+    - Not interesting to look at when we save just 1 note.
+    - Can look at it if you're curious.
+- MongoDB documentation is not that great/consistent.
+
