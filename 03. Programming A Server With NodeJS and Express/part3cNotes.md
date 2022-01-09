@@ -97,7 +97,7 @@ const Note = mongoose.model('Note', noteSchema);
 
 const note = new Note({
     content: 'HTML is Easy',
-    date: Date(),
+    date: new Date(),
     important: true
 });
 
