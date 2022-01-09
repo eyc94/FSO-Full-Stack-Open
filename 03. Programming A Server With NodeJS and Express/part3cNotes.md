@@ -175,3 +175,25 @@ note.save().then(result => {
     - Can look at it if you're curious.
 - MongoDB documentation is not that great/consistent.
 
+## Fetching Objects From The Database
+- Comment code for generating new notes and replace with this:
+```javascript
+Note.find({}).then(result => {
+    result.forEach(note => {
+        console.log(note);
+    });
+    mongoose.connection.close();
+});
+```
+- When executed, program prints all the notes stored in the database.
+- Objects retrieved with `find` method of the `Note` model.
+    - Parameter of `find` is an object that tells what the search conditions are.
+    - Parameter is an empty object, so we get all notes in the `notes` collection.
+    - Search condition adheres to Mongo search query syntax.
+- We can restrict search to only include important notes like so:
+```javascript
+Note.find({ important: true }).then(result => {
+    // ...
+});
+```
+
