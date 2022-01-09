@@ -59,3 +59,68 @@ node --inspect index.js
 ```
 mongodb+srv://fullstack:<PASSWORD>@<CLUSTER_NAME>.mongodb.net/test?retryWrites=true
 ```
+- Can use DB directly from JS code with the official `MongoDB Node.JS Driver`:
+    - `https://mongodb.github.io/node-mongodb-native/`
+    - However, it's cumbersome.
+- We use the `Mongoose` library instead.
+    - Offers higher level API.
+- `Mongoose` is described as an `object document mapper (ODM)`.
+    - Saving JS objects as Mongo documents is straightforward with this library.
+- Install `Mongoose`.
+```
+npm install mongoose
+```
+- Do not add code dealing with Mongo to our backend just yet.
+- Make a practice app.
+- Create new file `mongo.js`:
+```javascript
+const mongoose = require('mongoose');
+
+if (process.argv.length < 3) {
+    console.log('Please provide the password as an argument: node mongo.js <password>');
+    process.exit(1);
+}
+
+const password = process.argv[2];
+
+const url = `mongodb+srv://fullstack:${password}@<CLUSTER_NAME>.mongodb.net/test?retryWrites=true`;
+
+mongoose.connect(url);
+
+const noteSchema = new mongoose.Schema({
+    content: String,
+    date: Date,
+    important: Boolean
+});
+
+const Note = mongoose.model('Note', noteSchema);
+
+const note = new Note({
+    content: 'HTML is Easy',
+    date: new Date(),
+    important: true
+});
+
+note.save().then(result => {
+    console.log('note saved!');
+    mongoose.connection.close();
+});
+```
+- Remember that your MongoDB URI is different than above.
+- The password is also passed in as a command line parameter.
+- Access it like so:
+```javascript
+const password = process.argv[2];
+```
+- Running `node mongo.js <password>` makes Mongo add a new document to the database.
+- Remember the password is the credentials we made earlier.
+    - URL encode password with special characters.
+- View current state of DB in the `Collection` section in the `Overview` tab.
+- We can change the name of the database from the URI: `mongodb+srv://fullstack:<PASSWORD>@<CLUSTER_NAME>.mongodb.net/<name_of_database>?retryWrites=true`
+- Change the DB name to `note-app` instead:
+    - `mongodb+srv://fullstack:<PASSWORD>@<CLUSTER_NAME>.mongodb.net/note-app?retryWrites=true`
+- Run the code again.
+- Data is now stored in the right database.
+- You can create a database by clicking `Create Database`.
+- You can also automatically create one because MongoDB Atlas auto creates a new DB when an app tries to connect to a DB that does not exist.
+
