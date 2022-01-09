@@ -124,3 +124,25 @@ const password = process.argv[2];
 - You can create a database by clicking `Create Database`.
 - You can also automatically create one because MongoDB Atlas auto creates a new DB when an app tries to connect to a DB that does not exist.
 
+## Schema
+- After establishing connection to DB, we define the `schema` for a note and the matching `model`.
+```javascript
+const noteSchema = new mongoose.Schema({
+    content: String,
+    date: Date,
+    important: Boolean
+});
+
+const Note = mongoose.model('Note', noteSchema);
+```
+- Define `schema` of a note that is stored in the `noteSchema` variable.
+    - It basically tells Mongoose how the note objects are to be stored in the DB.
+- In `Note` model definition, the first parameter is the name of the model.
+    - This is singular.
+    - The name of the collection is lowercased plural (e.g. `notes`).
+    - Mongoose convention to auto name collections are plural when schema refers to them in the singular (e.g. `Note`).
+- Document DBs like Mongo are `schemaless`.
+    - Doesn't care about the structure of data.
+    - Can store documents with different fields in the same collection.
+- Idea of Mongoose is that the data in the DB is given a `schema at the level of the application` that defines the shape of the documents stored in any given collection.
+
