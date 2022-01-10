@@ -385,3 +385,7 @@ app.get('/api/notes/:id', (request, response) => {
 });
 ```
 
+## Verifying Frontend & Backend Integration
+- When backend gets expanded, it's a good idea to test the backend first with the browser, Postman, or the VS Code REST client.
+- Then, test that the frontend works with the backend.
+- Integrate the frontend and backend one functionality at a time.
