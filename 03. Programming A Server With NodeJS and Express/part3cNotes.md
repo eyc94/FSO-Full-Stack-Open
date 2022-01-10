@@ -198,3 +198,58 @@ Note.find({ important: true }).then(result => {
 ```
 
 ## Backend Connected To A Database
+- We have enough knowledge to start using Mongo in our app.
+- Copy the Mongoose definitions to `index.js`.
+```javascript
+const mongoose = require('mongoose');
+
+// DO NOT SAVE YOUR PASSWORD TO GITHUB!!!
+const url = 'mongodb+srv://fullstack:<PASSWORD>@<CLUSTER_NAME>.mongodb.net/note-app?retryWrites=true';
+
+mongoose.connect(url);
+
+const noteSchema = new mongoose.Schema({
+    content: String,
+    date: Date,
+    important: Boolean
+});
+
+const Note = mongoose.model('Note', noteSchema);
+```
+- Change handler for fetching all notes:
+```javascript
+app.get('/api/notes', (request, response) => {
+    Note.find({}).then(notes => {
+        response.json(notes);
+    });
+});
+```
+- We can verify backend works for displaying all documents.
+    - Go to `localhost:3001/api/notes`.
+- Frontend assumes every object has a unique id in the `id` field.
+- We don't want to return the mongo versioning field `__v` to frontend.
+- One way to format objects returned by Mongoose is to `modify` the `toJSON` method of schema.
+    - Used on all instances of the models produced with that schema.
+- Modify like so:
+```javascript
+noteSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString();
+        delete returnedObject._id;
+        delete returnedObject.__v;
+    }
+});
+```
+- The `_id` property of Mongoose objects look like strings, but it's an object.
+- The `toJSON` method transforms it to a string.
+- Respond to HTTP request with a list of objects formatted with the `toJSON` method:
+```javascript
+app.get('/api/notes', (request, response) => {
+    Note.find({}).then(notes => {
+        response.json(notes);
+    });
+});
+```
+- `notes` variable is assigned an array of objects returned by Mongo.
+- When response is sent in JSON format, the `toJSON` method of each object in array is called automatically by `JSON.stringify` method.
+
