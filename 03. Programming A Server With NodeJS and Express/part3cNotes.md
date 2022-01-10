@@ -349,3 +349,39 @@ app.listen(PORT, () => {
 ```
 - Import `dotenv` before `note` model.
 
+## Using Database In Route Handlers
+- Change the rest of the backend to use the database.
+- Creating new note is like this:
+```javascript
+app.post('/api/notes', (request, response) => {
+    const body = request.body;
+
+    if (body === undefined) {
+        return response.status(400).json({ error: 'content missing '});
+    }
+
+    const note = new Note({
+        content: body.content,
+        important: body.important || false,
+        date: new Date()
+    });
+
+    note.save().then(savedNote => {
+        response.json(savedNote);
+    });
+});
+```
+- The note objects are created with `Note` constructor function.
+- Response sent inside of callback of `save` function.
+    - Ensures only to send response when successful operation.
+- The `savedNote` is the newly created note.
+    - It's sent back in the response formatted with the `toJSON` method.
+- Use Mongoose's `findById` method to get an individual note.
+```javascript
+app.get('/api/notes/:id', (request, response) => {
+    Note.findById(request.params.id).then(note => {
+        response.json(note);
+    });
+});
+```
+
