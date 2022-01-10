@@ -253,3 +253,99 @@ app.get('/api/notes', (request, response) => {
 - `notes` variable is assigned an array of objects returned by Mongo.
 - When response is sent in JSON format, the `toJSON` method of each object in array is called automatically by `JSON.stringify` method.
 
+## Database Configuration Into Its own Module
+- Extract Mongoose specific code to its own module.
+- Create new directory called `models`.
+    - Add a file called `note.js`.
+```javascript
+const mongoose = require('mongoose');
+
+const url = process.env.MONGODB_URI;
+
+console.log('connecting to', url);
+
+mongoose.connect(url)
+    .then(result => {
+        console.log('connected to MongoDB');
+    })
+    .catch((error) => {
+        console.log('error connecting to MongoDB');
+    });
+
+const noteSchema = new mongoose.Schema({
+    content: String,
+    date: Date,
+    important: Boolean
+});
+
+noteSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString();
+        delete returnedObject._id;
+        delete returnedObject.__v;
+    }
+});
+
+module.exports = mongoose.model('Note', noteSchema);
+```
+- Node `modules` are defined differently than defining `ES6 modules` in Part 2.
+- Public interface of module is defined by setting value to the `module.exports` variable.
+    - Set to the `Note` model.
+    - Variables defined in the module like `mongoose` and `url` are not accessible to users of the module.
+- Importing is like this in `index.js`:
+```javascript
+const Note = require('./models/note');
+```
+- `Note` is assigned to the object that the module defines.
+- As you may have noticed, the connection is slightly different:
+```javascript
+const url = process.env.MONGODB_URI;
+
+console.log('connecting to', url);
+
+mongoose.connect(url)
+    .then(result => {
+        console.log('connected to MongoDB');
+    })
+    .catch((error) => {
+        console.log('error connecting to MongoDB:', error.message);
+    });
+```
+- Address of DB is passed via environment variable.
+- both event handlers log messages to console.
+- Many ways to define environment variables.
+- One way is to define it when it's started:
+```
+MONGODB_URI=address_here npm run dev
+```
+- A sophisticated way is to use `dotenv` library.
+- Install like so:
+```
+npm install dotenv
+```
+- To use the library, create a `.env` file at the root.
+- Environment variables are defined inside of the file:
+```
+MONGODB_URI='mongodb+srv://<USER>:<PASSWORD>@<CLUSTER_NAME>.mongodb.net/<DB_NAME>?retryWrites=true'
+PORT=3001
+```
+- Should ignore `.env` right away, so place it in `.gitignore`.
+    - This is confidential, so it should be ignored.
+- `.env` variables used with `require('dotenv').config()`.
+    - Reference in code with the `process.env.<ENV_VARIABLE>` syntax.
+- Change `index.js`:
+```javascript
+require('dotenv').config();
+const express = require('express');
+const app = express();
+const Note = require('./models/note');
+
+// ...
+
+const PORT = process.env.PORT;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+```
+- Import `dotenv` before `note` model.
+
