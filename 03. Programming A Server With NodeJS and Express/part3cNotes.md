@@ -475,3 +475,61 @@ app.use(errorHandler);
 - All other errors are handed to the `next` function to the default Express error handler.
 - Error handling middleware has to be the last loaded middleware.
 
+## The Order Of Middleware Loading
+- Execution order of middleware is the same as they are loaded into express with `app.use`.
+- Correct order is the following:
+```javascript
+app.use(express.static('build'));
+app.use(express.json());
+app.use(requestLogger);
+
+app.post('/api/notes', (request, response) => {
+    const body = request.body;
+    // ...
+});
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' });
+};
+
+// Handler of requests with unknown endpoint.
+app.use(unknownEndpoint);
+
+const errorHandler = (error, request, response, next) => {
+    // ...
+};
+
+// Handler of requests with result to errors.
+app.use(errorHandler);
+```
+- The json-parser middleware should be first among the few to be loaded first.
+- If order was below:
+```javascript
+app.use(requestLogger);
+
+app.post('/api/notes', (request, response) => {
+    // request.body is undefined!
+    const body = request.body;
+    // ...
+});
+
+app.use(express.json());
+```
+- JSON data sent with HTTP requests would not be available for logger middleware or POST route handler.
+    - `request.body` is `undefined` at that point.
+- Important that the middleware for handling unsupported routes is next to the last middleware loaded into Express, just before the error handler.
+- The following order causes issues:
+```javascript
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' });
+};
+
+// Handler of requests with unknown endpoint.
+app.use(unknownEndpoint);
+
+app.get('/api/notes', (request, response) => {
+    // ...
+});
+```
+- Handling of unknown endpoints is ordered before the HTTP request handler.
+
