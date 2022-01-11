@@ -435,3 +435,43 @@ app.get('/api/notes/:id', (request, response) => {
 - Appropriate status code is 400 bad request.
 - Never a bad idea to print error.
 
+## Moving Error Handling Into Middleware
+- Code for error handling is inside our code.
+- Better to implement error handling in a single place.
+- Change handler for the route `/api/notes:id` so it passes the error forward with the `next` function.
+    - `next` function is passed to handler as the third parameter.
+```javascript
+app.get('/api/notes/:id', (request, response, next) => {
+    Note.findById(request.params.id)
+        .then(note => {
+            if (note) {
+                response.json(note);
+            } else {
+                response.status(404).end();
+            }
+        })
+        .catch(error => next(error));
+});
+```
+- The `error` is given to `next` function as a parameter.
+    - If `next` was called without parameter, execution moves to next route or middleware.
+    - If passed with parameter, execution continues to the `error handler middleware`.
+- Express `error handlers` are middleware defined with a function that accepts `four parameters`.
+```javascript
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message);
+
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' });
+    }
+
+    next(error);
+};
+
+// This has to be the last loaded middleware.
+app.use(errorHandler);
+```
+- The handler above handles the case for a malformatted id.
+- All other errors are handed to the `next` function to the default Express error handler.
+- Error handling middleware has to be the last loaded middleware.
+
