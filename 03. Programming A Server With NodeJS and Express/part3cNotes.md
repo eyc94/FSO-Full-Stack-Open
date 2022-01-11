@@ -389,3 +389,49 @@ app.get('/api/notes/:id', (request, response) => {
 - When backend gets expanded, it's a good idea to test the backend first with the browser, Postman, or the VS Code REST client.
 - Then, test that the frontend works with the backend.
 - Integrate the frontend and backend one functionality at a time.
+
+## Error Handling
+- Visiting URL of a note with an id that does not exist leads to a response that is `null`.
+- Change behavior so that if note with given id does not exist, server responds with 404.
+- Implement a `catch` block to handle cases where promise returned by `findById` method is `rejected`.
+```javascript
+app.get('/api/notes/:id', (request, response) => {
+    Note.findById(request.params.id)
+        .then(note => {
+            if (note) {
+                response.json(note);
+            } else {
+                response.status(404).end();
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            response.status(500).end();
+        });
+});
+```
+- No matching note means `note` is `null` and the else statement runs.
+    - Results in status 404.
+- If promise returned by `findById` is rejected, server returns status 500 internal server error.
+- One more type of error when we request an id in the wrong format.
+- Make small adjustment in `catch` block:
+```javascript
+app.get('/api/notes/:id', (request, response) => {
+    Note.findById(request.params.id)
+        .then(note => {
+            if (note) {
+                response.json(note);
+            } else {
+                response.status(404).end();
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            response.status(400).send({ error: 'malformatted id' });
+        });
+});
+```
+- Format of id is incorrect means the catch block will run.
+- Appropriate status code is 400 bad request.
+- Never a bad idea to print error.
+
