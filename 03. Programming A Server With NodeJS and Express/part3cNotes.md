@@ -533,3 +533,44 @@ app.get('/api/notes', (request, response) => {
 ```
 - Handling of unknown endpoints is ordered before the HTTP request handler.
 
+## Other Operations
+- Add missing functionality to app.
+    - Deleting and updating an individual note.
+- Easiest way to delete note from DB is `findByIdAndRemove` method:
+```javascript
+app.delete('/api/notes/:id', (request, response, next) => {
+    NotefindByIdAndRemove(request.params.id)
+        .then(result => {
+            response.status(204).end();
+        })
+        .catch(error => next(error));
+});
+```
+- Backend responds to 204 no content after success.
+    - Returns this for deleting a note that exists and deleting a note that does not exist.
+- The `result` callback parameter is used to see if resource was deleted.
+- Toggle of importance can be handled by `findByIdAndUpdate` method:
+```javascript
+app.put('/api/notes/:id', (request, response, next) => {
+    const body = request.body;
+
+    const note = {
+        content: body.content,
+        important: body.important
+    };
+
+    Note.findByIdAndUpdate(request.params.id, note, { new: true })
+        .then(updatedNote => {
+            response.json(updatedNote);
+        })
+        .catch(error => next(error));
+});
+```
+- In the code above, we allow content of the note to be edited.
+- We do not support changing creation date.
+- The `findByIdAndUpdate` method receives a JS object as its parameter.
+    - Not a new note created by the `Note` constructor.
+- The `updatedNote` parameter receives the original document `without the mods`.
+- Added the optional `{ new: true }` parameter.
+    - Cause our event handler to be called with the new modified document instead of the original.
+- Test with backend and frontend.
