@@ -118,3 +118,16 @@ app.post('/api/notes', (request, response, next) => {
 - It's better when we deal with many asynchronous operations done in sequence.
 - We will learn more about `asynch/await` syntax in JavaScript which makes writing asynchronous operations easier.
 
+## Deploying The Database Backend To Production
+- We have to make a new production build because of the changes in the frontend.
+- The `dotenv` is only used when backend is not in `production mode`.
+- We defined environment variables in `.env`, but we should define variables for database URL in production.
+    - Done with `heroku config:set` command:
+```
+$ heroku config:set MONGODB_URI=mongodb+srv://fullstack:<PASSWORD>@<CLUSTER_NAME>.mongodb.net/<name_of_database>?retryWrites=true
+```
+- If the command above causes an error, just give the value an apostrophe.
+```
+$ heroku config:set MONGODB_URI='mongodb+srv://fullstack:<PASSWORD>@<CLUSTER_NAME>.mongodb.net/<name_of_database>?retryWrites=true'
+```
+
