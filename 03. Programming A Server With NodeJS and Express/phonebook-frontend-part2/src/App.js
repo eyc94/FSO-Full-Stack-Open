@@ -50,18 +50,21 @@ const App = () => {
                 .create(personObject)
                 .then(returnedPerson => {
                     setPersons(persons.concat(returnedPerson));
+                    setMessage(`Added ${newName}`);
+                    setTimeout(() => {
+                        setMessage(null);
+                    }, 5000);
+                    setResult('success');
                 })
                 .catch(error => {
                     console.log(error.response.data.error);
-                    setMessage(`${error.response.data.error}`)
+                    setMessage(`${error.response.data.error}`);
+                    setTimeout(() => {
+                        setMessage(null);
+                    }, 5000);
                     setResult('error');
                 });
         }
-        setMessage(`Added ${newName}`);
-        setTimeout(() => {
-            setMessage(null);
-        }, 5000);
-        setResult('success');
         setNewName('');
         setNewNumber('');
     };
