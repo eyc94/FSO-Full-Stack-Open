@@ -131,3 +131,147 @@ $ heroku config:set MONGODB_URI=mongodb+srv://fullstack:<PASSWORD>@<CLUSTER_NAME
 $ heroku config:set MONGODB_URI='mongodb+srv://fullstack:<PASSWORD>@<CLUSTER_NAME>.mongodb.net/<name_of_database>?retryWrites=true'
 ```
 
+## Lint
+- Look at a tool called `lint`.
+    - **Generally, lint or a linter is any tool that detects and flags errors in programming languages, including stylistic errors. The term lint-like behavior is sometimes applied to the process of flagging suspicious language usage. Lint-like tools generally perform static analysis of source code.**
+- In JS, the leading tool is `ESlint`.
+- Install ESlint as a development dependency to the backend project:
+```
+npm install eslint --save-dev
+```
+- Initialize a default ESlint configuration with:
+```
+npx eslint --init
+```
+- Answer all questions.
+- The configuration is saved into `.eslintrc.js`.
+```javascript
+module.exports = {
+    'env': {
+        'commonjs': true,
+        'es2021': true,
+        'node': true
+    },
+    'extends': 'eslint:recommended',
+    'parserOptions': {
+        'ecmaVersion': 12
+    },
+    'rules': {
+        'indent': [
+            'error',
+            4
+        ],
+        'linebreak-style': [
+            'error',
+            'unix'
+        ],
+        'quotes': [
+            'error',
+            'single'
+        ],
+        'semi': [
+            'error',
+            'never'
+        ],
+        'eqeqeq': 'error',
+            'no-trailing-spaces': 'error',
+    'object-curly-spacing': [
+        'error', 'always'
+    ],
+    'arrow-spacing': [
+        'error', { 'before': true, 'after': true }
+    ]
+    }
+}
+```
+- Change rule about indentation:
+```javascript
+"indent": [
+    "error",
+    2
+],
+```
+- Inspecting and validating files like `index.js` is done like so:
+```
+npx eslint index.js
+```
+- Recommended to create `npm script` for linting.
+```json
+{
+    // ...
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        // ...
+        "lint": "eslint ."
+    },
+    // ...
+}
+```
+- The `npm run lint` will check every file in the project.
+- The `build` folder will get checked too, so add to `.eslintignore` to not do this.
+```
+build
+```
+- Better alternative to linter in command line is to configure `eslint-plugin` to the editor.
+- It'll run it continuously.
+- We can add more rules. Let's add `eqeqeq` rule that warns us, if equality is checked with anything but the triple equals operator.
+- Add it under `rules` in the file:
+```javascript
+{
+    // ...
+    'rules': {
+        // ...
+        'eqeqeq': 'error',
+    },
+}
+```
+- Add few more changes to rules:
+    - Prevent trailing spaces at the end of lines.
+    - Require there be a space before and after curly braces.
+    - Demand consistent use of whitespaces in the function parameters of arrow functions.
+```javascript
+{
+    // ...
+    'rules': {
+        // ...
+        'eqeqeq': 'error',
+        'no-trailing-spaces': 'error',
+        'object-curly-spacing': [
+            'error', 'always'
+        ],
+        'arrow-spacing': [
+            'error', { 'before': true, 'after': true }
+        ]
+    },
+}
+```
+- Default config takes predetermined rules into use from `eslint:recommended`:
+```javascript
+'extends': 'eslint:recommended',
+```
+- This includes rule about `console.log` commands.
+- Disabling rule is done by defining value to 0 in the file.
+- Do the `no-console` rule:
+```javascript
+{
+  // ...
+  'rules': {
+    // ...
+    'eqeqeq': 'error',
+    'no-trailing-spaces': 'error',
+    'object-curly-spacing': [
+        'error', 'always'
+    ],
+    'arrow-spacing': [
+        'error', { 'before': true, 'after': true }
+    ],
+    'no-console': 0
+  },
+}
+```
+- Recommended to run linter from command line when making changes to `.eslintrc.js` file.
+    - Verifies file is correctly formatted.
+- Many projects adopted the Airbnb `JS style guide` by taking Airbnb's `ESlint` configuration into use:
+    - `https://github.com/airbnb/javascript`
+    - `https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb`
