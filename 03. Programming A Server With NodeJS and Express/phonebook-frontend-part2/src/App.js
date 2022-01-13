@@ -50,6 +50,11 @@ const App = () => {
                 .create(personObject)
                 .then(returnedPerson => {
                     setPersons(persons.concat(returnedPerson));
+                })
+                .catch(error => {
+                    console.log(error.response.data.error);
+                    setMessage(`${error.response.data.error}`)
+                    setResult('error');
                 });
         }
         setMessage(`Added ${newName}`);
