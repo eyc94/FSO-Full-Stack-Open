@@ -291,3 +291,187 @@ module.exports = mongoose.model('Note', noteSchema);
 - Small apps don't matter when it comes to structure.
     - Only when apps scale and get too big.
 - The above structure follows some standards and best practices from the internet.
+
+## Testing Node Applications
+- We have neglected automated testing.
+- Look at unit tests first.
+    - Not much to test because application is so simple.
+- Create new file `utils/for_testing.js` and write simple functions we can use for test writing practice.
+```javascript
+const palindrome = (string) => {
+    return string
+        .split('')
+        .reverse()
+        .join('');
+};
+
+const average = (array) => {
+    const reducer = (sum, item) => {
+        return sum + item;
+    };
+
+    return array.reduce(reducer, 0) / array.length;
+};
+
+module.exports = {
+    palindrome,
+    average
+};
+```
+- The `average` function uses array `reduce` method.
+    - Watch these first three videos from `Functional JavaScript` series on YouTube.
+    - `https://www.youtube.com/watch?v=BMUiFMZr7vk`
+    - `https://www.youtube.com/watch?v=bCqtb-Z5YGQ`
+    - `https://www.youtube.com/watch?v=Wl98eZpkp-c`
+- Many test libraries or `test runners` available for JavaScript.
+- We will use a testing library developed and used internally by Facebook called `jest`.
+    - `https://jestjs.io`
+    - Resembles the previous king of JS testing libraries, `Mocha`.
+        - `https://mochajs.org`
+- `jest` shines when testing React apps and backend.
+    - May not work with Windows if path has spaces in its name.
+- Install `jest` as a development dependency because we only need it during development of the app.
+```
+npm install --save-dev jest
+```
+- Define an `npm script` called `test` to execute tests with Jest.
+    - Report about test execution with `verbose` style.
+```json
+{
+    // ...
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "build:ui": "rm -rf build && cd <frontend_path> && npm run build && cp -r build <backend_path>",
+        "deploy": "git push heroku master",
+        "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
+        "logs:prod": "heroku logs --tail",
+        "lint": "eslint .",
+        "test": "jest --verbose"
+    },
+    // ...
+}
+```
+- Jest requires to specify that the execution environment is Node.
+- Add to `package.json`:
+```json
+{
+    // ...
+    "jest": {
+        "testEnvironment": "node"
+    }
+}
+```
+- Or, Jest can look for a config file with the name `jest.config.js` where we define execution environment:
+```javascript
+module.exports = {
+    testEnvironment: 'node'
+};
+```
+- Create a different directory for our tests called `tests`.
+- Create a new file called `palindrome.test.js`:
+```javascript
+const palindrome = require('../utils/for_testing').palindrome
+
+test('palindrome of a', () => {
+    const result = palindrome('a');
+
+    expect(result).toBe('a');
+});
+
+test('palindrome of react', () => {
+    const result = palindrome('react');
+
+    expect(result).toBe('tcaer');
+});
+
+test('palindrome of releveler', () => {
+    const result = palindrome('releveler');
+
+    expect(result).toBe('releveler');
+});
+```
+- The ESLint config is going to complain about `test` and `expect` commands.
+    - This is because the config does not allow `globals`.
+- Rid complains by adding `"jest": true` to the `env` property in the `.eslintrc.js` file.
+```javascript
+module.exports = {
+    'env': {
+        'commonjs': true,
+        'es2021': true,
+        'node': true,
+        'jest': true
+    },
+    'extends': 'eslint:recommended',
+    'parserOptions': {
+        'ecmaVersion': 12
+    },
+    'rules': {
+        // ...
+    },
+}
+```
+- The first row imports the function to be tested and assigns it to a variable called `palindrome`.
+```javascript
+const palindrome = require('../utils/for_testing').palindrome
+```
+- Individual test cases defined with `test` function.
+    - First parameter is the test description as a string.
+    - Second is a `function` that defines functionality for the test case.
+- Functionality looks like so:
+```javascript
+() => {
+    const result = palindrome('react');
+
+    expect(result).toBe('tcaer');
+}
+```
+- First, execute the code to be tested.
+    - Generate palindrome for the string `react`.
+- Next, verify result with `expect` function.
+    - The `expect` function wraps the resulting value into an object that offers `matcher` functions.
+    - These functions can be used to verify correctness of result.
+    - Use the `toBe` matcher to compare two strings.
+- Jest expects the names of test files to contain `.test`.
+    - Every test file will have extension `.test.js`.
+- Add few tests for the `average` function into a new file `tests/average.test.js`.
+```javascript
+const average = require('../utils/for_testing').average
+
+describe('average', () => {
+    test('of one value is the value itself', () => {
+        expect(average([1]).toBe(1));
+    });
+
+    test('of many is calculated right', () => {
+        expect(average([1, 2, 3, 4, 5, 6]).toBe(3.5));
+    });
+
+    test('of empty array is zero', () => {
+        expect(average([]).toBe(0));
+    });
+});
+```
+- Function does not work correctly with an empty array.
+    - In JS, dividing by 0 results in `NaN`.
+    - Fix by changing the `for_testing.js` file's `average` function definition.
+```javascript
+const average = array => {
+    const reducer = (sum, item) => {
+        return sum + item;
+    };
+
+    return array.length === 0
+        ? 0
+        : array.reduce(reducer, 0) / array.length;
+};
+```
+- If length of array is 0, return 0.
+- Other cases, use `reduce` method to calculate average.
+- Notice how we defined a `describe` block around the tests that was given the name `average`.
+```javascript
+describe('average', () => {
+    // tests
+});
+```
+- The `describe` block is used to group tests into logical collections.
