@@ -308,3 +308,70 @@ npm test -- -t 'notes'
 - When running a single test, mongoose connection might stay open if no tests using the connection are run.
     - Might be because supertest primes connection but Jest does not run the afterAll portion of code.
 
+## async/await
+- Look at the `async` and `await` keywords.
+- Makes it possible to use `asynchronous functions that return a promise` in a way that makes the code look synchronous.
+- Fetching of notes from DB with promises looks like:
+```javascript
+Note.find({}).then(notes => {
+    console.log('operation returned the following notes', notes);
+});
+```
+- `Note.find()` returns a promise which we can access by registering a callback function with `then`.
+- Write in the callback function the code we want to run when the operation finishes.
+- Troublesome if we wanted to make several asynchronous calls in sequence.
+- Asynchronous calls are made in the callback.
+    - This leads to complicated code and what is called `callback hell`.
+- Can use `chaining promises` to keep it under control a bit.
+    - Example below of fetching all notes and then deleting the first one.
+```javascript
+Note.find({})
+    .then(notes => {
+        return notes[0].remove();
+    })
+    .then(response => {
+        console.log('the first note is removed');
+        // More code here.
+    });
+```
+- The then-chain is okay. We can do better.
+- The `generator functions` provided a clever way of writing asynchronous code in a way that looks synchronous.
+    - Clunky and not widely used.
+- The `async` and `await` keywords bring the same functionality as the generators.
+- Fetch all notes in DB by using the `await` operator like so:
+```javascript
+const notes = await Note.find({});
+
+console.log('operation returned the following notes', notes);
+```
+- Code above looks synchronous.
+- Execution of code is paused at `const notes = await Note.find({});`.
+    - Waits until promise is `fulfilled`.
+    - Then continues to the next line.
+    - When execution continues, result of operation that returned a promise is assigned to the `notes` variable.
+- The complicated example above could be implemented using await like this:
+```javascript
+const notes = await Note.find({});
+const response = await notes[0].remove();
+
+console.log('the first note is removed');
+```
+- Code is a lot simpler than the then-chain.
+- The await operator has to return a promise.
+- Using `await` is possible only inside of an `async` function.
+    - In order for previous examples to work, they have to be using async functions.
+    - Notice first line in arrow function definition:
+```javascript
+const main = async () => {
+    const notes = await Note.find({});
+    console.log('operation returned the following notes', notes);
+
+    const response = await notes[0].remove();
+    console.log('the first note is removed');
+};
+
+main();
+```
+- Code declares that the function assigned to `main` is asynchronous.
+- The code calls the function with `main()`.
+
