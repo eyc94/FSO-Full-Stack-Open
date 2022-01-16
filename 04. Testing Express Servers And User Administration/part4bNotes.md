@@ -90,3 +90,140 @@ TEST_MONGODB_URI='mongodb+srv://first-user:<password>@cluster0.r0xrw.mongodb.net
     - We write our own for practice since our app is simple and it's best to learn.
 - These are the only changes we need to make.
 
+## supertest
+- Use `supertest` package to help write tests for testing the API.
+- Install as development dependency.
+```
+npm install --save-dev supertest
+```
+- Write first test in `tests/note_api.test.js` file:
+```javascript
+const mongoose = require('mongoose');
+const supertest = require('supertest');
+const app = require('../app');
+
+const api = supertest(app);
+
+test('notes are returns as json', async () => {
+    await api
+        .get('/api/notes')
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+});
+
+afterAll(() => {
+    mongoose.connection.close();
+});
+```
+- The test imports that Express app from `app.js` module.
+    - Wraps the module with `supertest` function into a `superagent` object.
+    - The object is assigned to `api` variable.
+    - Tests can use `api` for making HTTP requests to the backend.
+- Test makes GET request to `api/notes` url.
+    - Verifies request is responded to with status code 200.
+    - Also verifies that `Content-Type` header is set to `application/json`.
+    - Use `RegEx` syntax for `/application\/json/`
+        - `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions`
+- Arrow function that defines the test is preceded by `async` keyword.
+- Method call for `api` object is preceded by `await` keyword.
+- We will look at the `async/await` magic later after writing more tests.
+- The async/await syntax is related to the fact that making a request to API is an `asynchronous` operation.
+    - The `async/await` can be used for writing asynchronous code with the appearance of synchronous code.
+- Once all tests run, you have to close connection.
+    - Achieved with `afterAll` method:
+```javascript
+afterAll(() => {
+    mongoose.connection.close();
+});
+```
+- You might get this warning:
+    - **Jest did not exit one second after the test run has completed.**
+- Add a `jest.config.js` file at the root:
+```javascript
+module.exports = {
+    testEnvironment: 'node'
+};
+```
+- Tests may take longer than the default Jest test timeout of 5000ms.
+    - Solved by adding third parameter to test function:
+```javascript
+test('notes are returned as json', async () => {
+    await api
+        .get('/api/notes')
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+}, 100000);
+```
+- Third parameter sets timeout to 100000 ms.
+- Remember that we extracted Express app into `app.js`.
+- `index.js` launches the app at the specified port with Node's built-in `http` object.
+```javascript
+const app = require('./app');
+const http = require('http');
+const config = require('./utils/config');
+const logger = require('./utils/logger');
+
+const server = http.createServer(app);
+
+server.listen(config.PORT, () => {
+    logger.info(`Server running on port ${config.PORT}`);
+});
+```
+- Tests only use express application defined in `app.js`.
+```javascript
+const mongoose = require('mongoose');
+const supertest = require('supertest');
+const app = require('../app');
+
+const api = supertest(app);
+
+// ...
+```
+- Documentation for supertest:
+    - **If the server is not already listening for connections then it is bound to an ephemeral port for you so there is no need to keep track of ports.**
+- So, supertest makes sure that the app being tested is started at the port that it uses internally.
+- Write more tests:
+```javascript
+test('there are two notes', async () => {
+    const response = await api.get('/api/notes');
+
+    expect(response.body).toHaveLength(2);
+});
+
+test('the first note is about HTTP methods', async () => {
+    const response = await api.get('/api/notes');
+
+    expect(response.body[0].content).toBe('HTML is easy');
+});
+```
+- Store response of request to `response` variable.
+- Instead of using `supertest` for verifying status code and headers, we inspect the response data stored in `response.body`.
+- Verify format and content of response with `expect` method of Jest.
+- Normally, we use callback functions to access data returned by promises.
+```javascript
+const response = await api.get('/api/notes');
+
+// Execution gets here only after the HTTP request is complete.
+// The result of HTTP request is saved in variable 'response'.
+expect(response.body).toHaveLength(2);
+```
+- Middleware that outputs info about HTTP requests is obstructing test execution output.
+    - Modify logger so that it does not print to console in test mode.
+```javascript
+const info = (...params) => {
+    if (process.env.NODE_ENV !== 'test') {
+        console.log(...params);
+    }
+};
+
+const error = (...params) => {
+    if (process.env.NODE_ENV !== 'test') {
+        console.error(...params);
+    }
+};
+
+module.exports = {
+    info, error
+};
+```
+
