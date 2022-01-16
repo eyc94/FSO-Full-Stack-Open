@@ -227,3 +227,61 @@ module.exports = {
 };
 ```
 
+## Initializing The Database Before Tests
+- Tests are passing but they rely on state of the database.
+- To make tests more robust, we have to reset the DB and make the test data in a controlled manner before running tests.
+- We are using the `afterAll` function to close connection to DB after tests are finished.
+- We can use other functions like before executing operations once before any test is run.
+- Or, we can use functions every time before a test is run.
+```javascript
+const mongoose = require('mongoose');
+const supertest = require('supertest');
+const app = require('../app');
+const api = supertest(app);
+const Note = require('../models/note');
+const initialNotes = [
+    {
+        content: 'HTML is easy',
+        date: new Date(),
+        important: false
+    },
+    {
+        content: 'Browser can execute only Javascript',
+        date: new Date(),
+        important: true
+    }
+];
+
+beforeEach(async () => {
+    await Note.deleteMany({});
+    let noteObject = new Note(initialNotes[0]);
+    await noteObject.save();
+    noteObject = new Note(initialNotes[1]);
+    await noteObject.save();
+});
+
+// ...
+```
+- DB is cleared at the start.
+- We save two notes stored in `initialNotes` to DB.
+- We ensure that the DB is in the same state before every test is run.
+- Make changes to the last two tests:
+```javascript
+test('all notes are returned', async () => {
+    const response = await api.get('/api/notes');
+
+    expect(response.body).toHaveLength(initialNotes.length);
+});
+
+test('a specific note is within the returned notes', async () => {
+    const response = await api.get('/api/notes');
+
+    const contents = response.body.map(r => r.content);
+    expect(contents).toContain(
+        'Browser can execute only Javascript'
+    );
+});
+```
+- The `response.body.map(r => r.content)` creates an array that has the content of every note returned by API.
+- The `toContain` function checks that the given note (parameter) is in the list of contents.
+
