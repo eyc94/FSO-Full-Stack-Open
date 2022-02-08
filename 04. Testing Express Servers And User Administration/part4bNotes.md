@@ -376,3 +376,15 @@ main();
 - The code calls the function with `main()`.
 
 ## async/await In The Backend
+- Change backend to async/await.
+- Can change route handler functions into async functions.
+- Route for fetching all notes:
+```javascript
+notesRouter.get('/', async (request, response) => {
+    const notes = await Note.find({});
+    response.json(notes);
+});
+```
+- Test endpoint through browser.
+- Run tests we ran earlier.
+
