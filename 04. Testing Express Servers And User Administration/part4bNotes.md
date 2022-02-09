@@ -742,3 +742,81 @@ notesRouter.get('/:id', async (request, response) => {
 });
 ```
 
+## Optimizing The beforeEach Function
+- Take a look at `beforeEach` function.
+```javascript
+beforeEach(async () => {
+    await Note.deleteMany({});
+
+    let noteObject = new Note(helper.initialNotes[0]);
+    await noteObject.save();
+
+    noteObject = new Note(helper.initialNotes[1]);
+    await noteObject.save();
+});
+```
+- Saves the notes from `initialNotes` in two operations.
+- Better way to save multiple objects to DB:
+```javascript
+beforeEach(async () => {
+    await Note.deleteMany({});
+    console.log('cleared');
+
+    helper.initialNotes.forEach(async (note) => {
+        let noteObject = new Note(note);
+        await noteObject.save();
+        console.log('saved');
+    });
+
+    console.log('done');
+});
+
+test('notes are returned as json', async () => {
+    console.log('entered test');
+    // ...
+});
+```
+- Save notes from `initialNotes` with `forEach` method.
+- Tests don't work as intended.
+- The logs output this:
+```
+cleared
+done
+entered test
+saved
+saved
+```
+- Test starts before DB initialized.
+- This is because the `forEach` loops generates its own asynchronous operation.
+- `beforeEach` does not wait for them to finish executing.
+- The `await` commands are defined in the `forEach` NOT in `beforeEach`.
+- The `await` is basically in a separate function that `beforeEach` will NOT wait for.
+- One way to fix is to wait for all of the asynchronous operations to finish executing with `Promise.all` method.
+```javascript
+beforeEach(async () => {
+    await Note.deleteMany({});
+
+    const noteObjects = helper.initialNotes
+        .map(note => new Note(note));
+    const promiseArray = noteObjects.map(note => note.save());
+    await Promise.all(promiseArray);
+});
+```
+- An array of Mongoose objects are created with `Note` constructor for each note in `initialNotes`.
+- Creates a new array of promises that result from calling the `save` method.
+- The `Promise.all` converts an array of promises to just one promise.
+    - The single promise is fulfilled when every promise is resolved.
+- The `await Promise.all(promiseArray);` basically waits for all promises to be fulfilled (saved to DB).
+- We can access the returned values of all promises by assigning to variable.
+- `Promise.all` executes all promises in parallel.
+    - If you don't want them to execute in parallel, just use a `for...of` block.
+```javascript
+beforeEach(async () => {
+    await Note.deleteMany({});
+
+    for (let note of helper.initialNotes) {
+        let noteObject = new Note(note);
+        await noteObject.save();
+    }
+});
+```
