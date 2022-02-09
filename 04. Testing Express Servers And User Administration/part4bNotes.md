@@ -388,3 +388,193 @@ notesRouter.get('/', async (request, response) => {
 - Test endpoint through browser.
 - Run tests we ran earlier.
 
+## More Tests and Refactoring The Backend
+- Refactoring brings the risk of regression.
+    - Breaking existing functionality.
+- Refactor other operations by writing tests first for each route of API.
+- Start with adding new note.
+    - Test adding new note.
+    - Verify amount of notes returned by API increases by 1.
+    - Verify new note is on the list.
+```javascript
+test('a valid note can be added', async () => {
+    const newNote = {
+        content: 'async/await simplifies making async calls',
+        important: true
+    };
+
+    await api
+        .post('/api/notes')
+        .send(newNote)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+
+    const response = await api.get('/api/notes');
+
+    const contents = response.body.map(r => r.content);
+
+    expect(response.body).toHaveLength(initialNotes.length + 1);
+    expect(contents).toContain(
+        'async/await simplifies making async calls'
+    );
+});
+```
+- Tests pass.
+- Write a test that verifies that a note without content will not be added to DB.
+```javascript
+test('note without content is not added', async () => {
+    const newNote = {
+        important: true
+    };
+
+    await api
+        .post('/api/notes')
+        .send(newNote)
+        .expect(400);
+    
+    const response = await api.get('/api/notes');
+
+    expect(response.body).toHaveLength(initialNotes.length);
+});
+```
+- Both tests fetch all notes.
+- Good to extract the repeated steps into a separate module.
+    - Extract function into a new file called `tests/test_helper.js` in the same directory as test file.
+```javascript
+const Note = require('../models/note');
+
+const initialNotes = [
+    {
+        content: 'HTML is easy',
+        date: new Date(),
+        important: false
+    },
+    {
+        content: 'Browser can execute only Javascript',
+        date: new Date(),
+        important: true
+    }
+];
+
+const nonExistingId = async () => {
+    const note = new Note({ content: 'willremovethissoon', date: new Date() });
+    await note.save();
+    await note.remove();
+
+    return note._id.toString();
+};
+
+const notesInDb = async () => {
+    const notes = await Note.find({});
+    return notes.map(note => note.toJSON());
+};
+
+module.exports = {
+    initialNotes, nonExistingId, notesInDb
+};
+```
+- Check notes stored in DB with `notesInDb` function.
+- `initialNotes` contains the initial database state.
+- `nonExistingId` used for creating DB object ID that does not belong to any note object in DB.
+- The tests can now use the helper module.
+```javascript
+const supertest = require('supertest');
+const mongoose = require('mongoose');
+const helper = require('./test_helper');
+const app = require('../app');
+const api = supertest(app);
+
+const Note = require('../models/note');
+
+beforeEach(async () => {
+    await Note.deleteMany({});
+
+    let noteObject = new Note(helper.initialNotes[0]);
+    await noteObject.save();
+
+    noteObject = new Note(helper.initialNotes[1]);
+    await noteObject.save();
+});
+
+test('notes are returned as json', async () => {
+    await api
+        .get('/api/notes')
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+});
+
+test('all notes are returned', async () => {
+    const response = await api.get('/api/notes');
+
+    expect(response.body).toHaveLength(helper.initialNotes.length);
+});
+
+test('a specific note is within the returned notes', async () => {
+    const response = await api.get('/api/notes');
+
+    const contents = response.body.map(r => r.content);
+
+    expect(contents).toContain(
+        'Browser can execute only Javascript'
+    );
+});
+
+test('a valid note can be added', async () => {
+    const newNote = {
+        content: 'async/await simplifies making async calls',
+        important: true
+    };
+
+    await api
+        .post('/api/notes')
+        .send(newNote)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+
+    const notesAtEnd = await helper.notesInDb();
+    expect(notesAtEnd).toHaveLength(helper.initialNotes.length + 1);
+
+    const contents = notesAtEnd.map(n => n.content);
+    expect(contents).toContain(
+        'async/await simplifies making async calls'
+    );
+});
+
+test('note without content is not added', async () => {
+    const newNote = {
+        important: true
+    };
+
+    await api
+        .post('/api/notes')
+        .send(newNote)
+        .expect(400);
+    
+    const notesAtEnd = await helper.notesInDb();
+
+    expect(notesAtEnd).toHaveLength(helper.initialNotes.length);
+});
+
+afterAll(() => {
+    mongoose.connection.close();
+});
+```
+- Tests work.
+- Refactor code to use async/await syntax.
+- Make changes to code handling add new note.
+```javascript
+notesRouter.post('/', async (request, response, next) => {
+    const body = request.body;
+
+    const note = new Note({
+        content: body.content,
+        important: body.important || false,
+        date: new Date()
+    });
+
+    const savedNote = await note.save();
+    response.json(savedNote);
+});
+```
+- Notice we don't handle errors.
+
