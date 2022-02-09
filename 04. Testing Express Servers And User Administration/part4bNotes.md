@@ -664,3 +664,81 @@ notesRouter.delete('/:id', async (request, response, next) => {
 });
 ```
 
+## Eliminating The try-catch
+- So async/await unclutters code but the try/catch is the price to pay for it.
+- Route handlers follow this structure:
+```javascript
+try {
+    // do the async operations here
+} catch (exception) {
+    next(exception);
+}
+```
+- Can we refactor to eliminate try/catch?
+    - The `express-async-errors` library has a solution for this.
+- Install:
+```
+npm install express-async-errors
+```
+- Using library in `app.js`:
+```javascript
+const config = require('./utils/config');
+const express = requress('express');
+require('express-async-errors');
+const app = express();
+const cors = require('cors');
+const notesRouter = require('./controllers/notes');
+const middleware = require('./utils/middleware');
+const logger = require('./utils/logger');
+const mongoose = require('mongoose');
+
+// ...
+
+module.exports = app;
+```
+- Eliminates try/catch.
+- Route for deleting note with try/catch:
+```javascript
+notesRouter.delete('/:id', async (request, response, next) => {
+    try {
+        await Note.findByIdAndRemove(request.params.id);
+        response.status(204).end();
+    } catch (exception) {
+        next(exception);
+    }
+});
+```
+- Route for deleting note without try/catch:
+```javascript
+notesRouter.delete('/:id', async (request, response) => {
+    await Note.findByIdAndRemove(request.params.id);
+    response.status(204).end();
+});
+```
+- No more call to `next(exception)`.
+- Library handles everything under the hood.
+- Other routes become:
+```javascript
+notesRouter.post('/', async (request, response) => {
+    const body = request.body;
+
+    const note = new Note({
+        content: body.content,
+        important: body.important || false,
+        date: new Date()
+    });
+
+    const savedNote = await note.save();
+    response.json(savedNote);
+});
+
+notesRouter.get('/:id', async (request, response) => {
+    const note = await Note.findById(request.params.id);
+    if (note) {
+        response.json(note);
+    } else {
+        response.status(404).end();
+    }
+});
+```
+
