@@ -578,3 +578,89 @@ notesRouter.post('/', async (request, response, next) => {
 ```
 - Notice we don't handle errors.
 
+## Error Handling and async/await
+- If there is an error, it will be unhandled.
+- Request would never receive the response.
+- Recommended to use `try/catch` mechanism to handle errors.
+```javascript
+notesRouter.post('/', async (request, response, next) => {
+    const body = request.body;
+
+    const note = new Note({
+        content: body.content,
+        important: body.important || false,
+        date: new Date()
+    });
+
+    try {
+        const savedNote = await note.save();
+        response.json(savedNote);
+    } catch (exception) {
+        next(exception);
+    }
+})
+```
+- The catch block calls `next`.
+    - Passes request handling to error handling middleware.
+- Write tests for fetching and removing an individual note.
+```javascript
+test('a specific note can be viewed', async () => {
+    const notesAtStart = await helper.notesInDb();
+
+    const notesToView = notesAtStart[0];
+
+    const resultNote = await api
+        .get(`/api/notes/${noteToView.id}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+    
+    const processedNoteToView = JSON.parse(JSON.stringify(noteToView));
+
+    expect(resultNote.body).toEqual(processedNoteToView);
+});
+
+test('a note can be deleted', async () => {
+    const notesAtStart = await helper.notesInDb();
+    const noteToDelete = notesAtStart[0];
+
+    await api
+        .delete(`/api/notes/${noteToDelete.id}`)
+        .expect(204);
+    
+    const notesAtEnd = await helper.notesInDb();
+
+    expect(notesAtEnd).toHaveLength(
+        helper.initialNotes.length - 1;
+    );
+
+    const contents = notesAtEnd.map(r => r.content);
+
+    expect(contents).not.toContain(noteToDelete.content);
+});
+```
+- Tests pass so refactor the tested routes to use async/await.
+```javascript
+notesRouter.get('/:id', async (request, response, next) => {
+    try {
+        const note = await Note.findById(request.params.id);
+
+        if (note) {
+            response.json(note);
+        } else {
+            response.status(404).end();
+        }
+    } catch (exception) {
+        next(exception);
+    }
+});
+
+notesRouter.delete('/:id', async (request, response, next) => {
+    try {
+        await Note.findByIdAndRemove(request.params.id);
+        response.status(204).end();
+    } catch (exception) {
+        next(exception);
+    }
+});
+```
+
