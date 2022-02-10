@@ -105,3 +105,58 @@
 - They are tightly nested in users collection.
 - Schema usually and must support use case of application.
 
+## Mongoose Schema For Users
+- We make the decision to store ids of notes in the user document.
+- Define model for a user in `models/user.js`:
+```javascript
+const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+    username: String,
+    name: String,
+    passwordHash: String,
+    notes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Note'
+        }
+    ]
+});
+
+userSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString();
+        delete returnedObject._id;
+        delete returnedObject.__v;
+        // The passwordHash should not be revealed.
+        delete returnedObject.passwordHash;
+    }
+});
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;
+```
+- Notes are stored in user document as array of Mongo ids.
+- The type of the `notes` field is `ObjectId`.
+- It references `Note`.
+- Expand schema of Note in `models/note.js` as well:
+```javascript
+const noteSchema = new mongoose.Schema({
+    content: {
+        type: String,
+        required: true,
+        minLength: 5
+    },
+    date: Date,
+    important: Boolean,
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
+});
+```
+- Now the notes have references to the user who created them.
+- References now stored in both documents.
+    - This is different than relational DBs.
+
