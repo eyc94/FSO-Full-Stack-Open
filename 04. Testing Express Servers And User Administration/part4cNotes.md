@@ -16,3 +16,92 @@
 - We will just make multiple queries if needed.
     - Mongoose takes care of joining and aggregating data.
 
+## References Across Collections
+- Relational DBs just require that our note contains a `reference key` to the user that created it.
+    - Can do the same in document DBs.
+- Assume `users` contains two users:
+```javascript
+[
+    {
+        username: 'mluukkai',
+        _id: 123456
+    },
+    {
+        username: 'hellas',
+        _id: 141414
+    }
+];
+```
+- The `notes` contains three notes with a `user` field that references a user in `users`:
+```javascript
+[
+    {
+        content: 'HTML is easy',
+        important: false,
+        _id: 221212,
+        user: 123456
+    },
+    {
+        content: 'The most important operations of HTTP protocol are GET and POST',
+        important: true,
+        _id: 221255,
+        user: 123456
+    },
+    {
+        content: 'A proper dinosaur codes with Java',
+        important: false,
+        _id: 221244,
+        user: 141414
+    }
+];
+```
+- Document DBs don't require the user id be in notes collection.
+- It could be the opposite or both!
+```javascript
+[
+    {
+        username: 'mluukkai',
+        _id: 123456,
+        notes: [221212, 221255]
+    },
+    {
+        username: 'hellas',
+        _id: 141414,
+        notes: [221244]
+    }
+];
+```
+- Users can have many notes, so notes is stored as an array.
+- Can also be good to nest entire notes array as part of the documents in the users collection:
+```javascript
+[
+    {
+        username: 'mluukkai',
+        _id: 123456,
+        notes: [
+            {
+                content: 'HTML is easy',
+                important: false
+            },
+            {
+                content: 'The most important operations of HTTP protocol are GET and POST',
+                important: true
+            }
+        ]
+    },
+    {
+        username: 'hellas',
+        _id: 141414,
+        notes: [
+            {
+                content: 'A proper dinosaur codes with Java',
+                important: false
+            }
+        ]
+    }
+];
+```
+- Notice there are no ids in the notes.
+- They are tightly nested in users collection.
+- Schema usually and must support use case of application.
+
