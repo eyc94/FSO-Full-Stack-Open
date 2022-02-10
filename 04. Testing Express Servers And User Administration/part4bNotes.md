@@ -940,8 +940,8 @@ describe('deletion of a note', () => {
         const notesAtEnd = await helper.notesInDb();
 
         expect(notesAtEnd).toHaveLength(
-            helper.initialNotes.length - 1;
-        )
+            helper.initialNotes.length - 1
+        );
 
         const contents = notesAtEnd.map(r => r.content);
         expect(contents).not.toContain(noteToDelete.content);
