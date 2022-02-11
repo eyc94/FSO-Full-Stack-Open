@@ -330,6 +330,35 @@ userSchema.plugin(uniqueValidator);
 ```
 - Can also test other validation properties.
 ~~~
+- Mongoose does not have a built-in validator for checking uniqueness of a field.
+    - We can use `mongoose-unique-validator`.
+    - At the time of this writing, it does not work with Mongoose version 6.x.
+    - Implement this on our own.
+```javascript
+usersRouter.post('/', async (request, response) => {
+    const { username, name, password } = request.body;
+
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+        return response.status(400).json({
+            error: 'username must be unique'
+        });
+    }
+
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
+    const user = new User({
+        username,
+        name,
+        passwordHash
+    });
+
+    const savedUser = await user.save();
+
+    response.status(201).json(savedUser);
+});
+```
 - Let's add initial implementation of a route handler that returns all users in DB:
 ```javascript
 usersRouter.get('/', async (request, response) => {
