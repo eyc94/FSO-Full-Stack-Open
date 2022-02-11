@@ -237,7 +237,7 @@ describe('when there is initially one user in db', () => {
         await api
             .post('/api/users')
             .send(newUser)
-            .expect(200)
+            .expect(201)
             .expect('Content-Type', /application\/json/);
 
         const usersAtEnd = await helper.usersInDb();
@@ -288,17 +288,18 @@ describe('when there is initially one user in db', () => {
             .expect(400)
             .expect('Content-Type', /application\/json/);
         
-        expect(result.body.error).toContain('`username` to be unique');
+        expect(result.body.error).toContain('username to be unique');
 
         const usersAtEnd = await helper.usersInDb();
-        expect(usersAtEnd).toHaveLength(usersAtStart.length);
+        expect(usersAtEnd).toEqual(usersAtStart);
     });
 });
 ```
 - Test does not pass!
     - Practicing `test-driven development (TDD)` where tests are written before implementations.
-- Use Mongoose validators to help with uniqueness.
-- Use the `mongoose-unique-validator` npm package.
+- The `mongoose-unique-validator` solution below no longer works.
+- ~~Use Mongoose validators to help with uniqueness.~~
+- ~~Use the `mongoose-unique-validator` npm package.~~
 ```
 npm install mongoose-unique-validator
 ```
