@@ -237,3 +237,7 @@ const errorHandler = (error, request, response, next) => {
     - Fast in usage scenarios but limited compared to MongoDB.
 - Instead of using `Authorization` header, `cookies` are used for transferring token between client and server.
 
+## End Notes
+- Most tests are broken now because of the changes made.
+- Usernames and passwords and apps using token authentication must be over `HTTPS`.
+
