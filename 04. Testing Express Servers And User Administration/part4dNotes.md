@@ -75,3 +75,62 @@ app.use('/api/login', loginRouter);
     - It works when we do.
     - It can be any string.
 
+## Limiting Creating New Notes To Logged In Users
+- Only possible to create new notes if post request has valid token attached.
+- Notes is saved to the notes list of the user identified by token.
+- Several ways to send token from browser to server.
+    - We use `Authorization` header.
+    - Tells which `authentication scheme` is used.
+    - We use `Bearer` scheme.
+- If the token is `eyJhbGciOiJIUzI1NiIsInR5c2VybmFtZSI6Im1sdXVra2FpIiwiaW`, the `Authorization` header is:
+```
+Bearer eyJhbGciOiJIUzI1NiIsInR5c2VybmFtZSI6Im1sdXVra2FpIiwiaW
+```
+- Creating new note changes like this:
+```javascript
+const jwt = require('jsonwebtoken');
+
+// ...
+const getTokenFrom = request => {
+    const authorization = request.get('authorization');
+    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+        return authorization.substring(7);
+    }
+    return null;
+}
+
+notesRouter.post('/', async (request, response) => {
+    const body = request.body;
+    const token = getTokenFrom(request);
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token missing or invalid' });
+    }
+    const user = await User.findById(decodedToken.id);
+
+    const note = new Note({
+        content: body.content,
+        important: body.important === undefined ? false : body.important,
+        date: new Date(),
+        user: user._id
+    });
+
+    const savedNote = await note.save();
+    user.notes = user.notes.concat(savedNote._id);
+    await user.save();
+
+    response.json(savedNote);
+});
+```
+- The helper function `getTokenFrom` isolates the token `Authorization` header.
+- Validity of token checked by `jwt.verify`.
+- Decodes the token or returns Object which the token was based on.
+- No token means an error is returned.
+- Decoded object from token has username and id to tell who made request.
+    - If no id, error status code 401.
+    - Resolved request means execution is normal.
+- New note can be created using Postman.
+    - Only if `Authorization` header is given correct value.
+    - `bearer eyJhbGciOiJIUzI1NiIsInR5c2VybmFtZSI6Im1sdXVra2FpIiwiaW`
+    - Second value is token returned by login operation.
+
