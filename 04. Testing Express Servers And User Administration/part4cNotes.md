@@ -160,3 +160,187 @@ const noteSchema = new mongoose.Schema({
 - References now stored in both documents.
     - This is different than relational DBs.
 
+## Creating Users
+- Make route for creating new users.
+    - Users have unique `username`, a name, and a `passwordHash`.
+- `passwordHash` is output of one-way hash function applied to user's pass.
+- Do not store unencrypted passwords in DB as plain text.
+- Install `bcrypt` package for generating password hashes:
+```
+npm install bcrypt
+```
+- Make HTTP POST requests to `users` path.
+- Make a `controllers/users.js` file to make a router to handle users.
+    - Use route in main `app.js`:
+```javascript
+const usersRouter = require('./controllers/users');
+
+// ...
+
+app.use('/api/users', usersRouter);
+```
+- Contents of router file:
+```javascript
+const bcrypt = require('bcrypt');
+const usersRouter = require('express').Router();
+const User = require('../models/user');
+
+usersRouter.post('/', async (request, response) => {
+    const body = request.body;
+
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(body.password, saltRounds);
+
+    const user = new User({
+        username: body.username,
+        name: body.name,
+        passwordHash
+    });
+
+    const savedUser = await user.save();
+
+    response.json(savedUser);
+});
+
+module.exports = usersRouter;
+```
+- We store the `hash` of the pass sent not the pass itself.
+- Code does not have error handling for verifying usernames and passwords are in correct format.
+- Should test new feature manually.
+    - Better to automate tests.
+- Initial tests:
+```javascript
+const bcrypt = require('bcrypt');
+const User = require('../models/user');
+
+// ...
+
+describe('when there is initially one user in db', () => {
+    beforeEach(async () => {
+        await User.deleteMany({});
+
+        const passwordHash = await bcrypt.hash('secret', 10);
+        const user = new User({ username: 'root', passwordHash });
+
+        await user.save();
+    });
+
+    test('creation succeeds with a fresh username', async () => {
+        const usersAtStart = await helper.usersInDb();
+
+        const newUser = {
+            username: 'mluukkai',
+            name: 'Matti Luukkainen',
+            password: 'salainen'
+        };
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(200)
+            .expect('Content-Type', /application\/json/);
+
+        const usersAtEnd = await helper.usersInDb();
+        expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
+
+        const usernames = usersAtEnd.map(u => u.username);
+        expect(usernames).toContain(newUser.username);
+    });
+});
+```
+- Notice we use the `usersInDb()` helper function.
+    - It is defined in the `tests/test_helper.js` file.
+```javascript
+const User = require('../models/user');
+
+// ...
+
+const usersInDb = async () => {
+    const users = await User.find({});
+    return users.map(u => u.toJSON());
+};
+
+module.exports = {
+    initialNotes,
+    nonExistingId,
+    notesInDb,
+    usersInDb
+};
+```
+- The `beforeEach` creates a new user with username of `root` to the DB.
+- Write new test that verifies user of same username cannot be created.
+```javascript
+describe('when there is initially one user in db', () => {
+    // ...
+
+    test('creation fails with proper statuscode and message if username already taken', async () => {
+        const usersAtStart = await helper.usersInDb();
+
+        const newUser = {
+            username: 'root',
+            name: 'Superuser',
+            password: 'salainen'
+        };
+
+        const result = await api
+            .get('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/);
+        
+        expect(result.body.error).toContain('`username` to be unique');
+
+        const usersAtEnd = await helper.usersInDb();
+        expect(usersAtEnd).toHaveLength(usersAtStart.length);
+    });
+});
+```
+- Test does not pass!
+    - Practicing `test-driven development (TDD)` where tests are written before implementations.
+- Use Mongoose validators to help with uniqueness.
+- Use the `mongoose-unique-validator` npm package.
+```
+npm install mongoose-unique-validator
+```
+- Make the changes to `models/user.js` file:
+```javascript
+const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
+
+const userSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        unique: true
+    },
+    name: String,
+    passwordHash: String,
+    notes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Note'
+        }
+    ]
+});
+
+userSchema.plugin(uniqueValidator);
+
+// ...
+```
+- Can also test other validation properties.
+- Let's add initial implementation of a route handler that returns all users in DB:
+```javascript
+usersRouter.get('/', async (request, response) => {
+    const users = await User.find({});
+    response.json(users);
+});
+```
+- Send a POST request to `/api/users/` via Postman when making new users in the format:
+```json
+{
+    "notes": [],
+    "username": "root",
+    "name": "Superuser",
+    "password": "salainen"
+}
+```
+
