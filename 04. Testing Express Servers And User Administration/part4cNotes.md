@@ -300,6 +300,7 @@ describe('when there is initially one user in db', () => {
 - The `mongoose-unique-validator` solution below no longer works.
 - ~~Use Mongoose validators to help with uniqueness.~~
 - ~~Use the `mongoose-unique-validator` npm package.~~
+~~~
 ```
 npm install mongoose-unique-validator
 ```
@@ -328,6 +329,7 @@ userSchema.plugin(uniqueValidator);
 // ...
 ```
 - Can also test other validation properties.
+~~~
 - Let's add initial implementation of a route handler that returns all users in DB:
 ```javascript
 usersRouter.get('/', async (request, response) => {
