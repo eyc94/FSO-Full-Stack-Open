@@ -162,3 +162,78 @@ const errorHandler = (error, request, response, next) => {
     next(error);
 };
 ```
+
+## Problems of Token-Based Authentication
+- Easy to implement but one problem.
+- Once an app gets a token, the API has a blind trust to the token holder.
+- What if we want to revoke access?
+- Two solutions:
+    - Easier is to limit the validity period of a token.
+    - Other is to save information about each token to backend DB and to check for each API request if they have access rights.
+        - Called a `server side session`.
+```javascript
+loginRouter.post('/', async (request, response) => {
+    const body = request.body;
+
+    const user = await User.findOne({ username: body.username });
+    const passwordCorrect = user === null
+        ? false
+        : await bcrypt.compare(body.password, user.passwordHash);
+
+    if (!(user && passwordCorrect)) {
+        return response.status(401).json({
+            error: 'invalid username or password'
+        });
+    }
+
+    const userForToken = {
+        username: user.username,
+        id: user._id
+    };
+
+    // Token expires in 60*60 seconds, that is, in one hour.
+    const token = jwt.sign(
+        userForToken,
+        process.env.SECRET,
+        { expiresIn: 60*60 }
+    );
+
+    response
+        .status(200)
+        .send({ token, username: user.username, name: user.name });
+});
+```
+- Once token expires, client needs new token.
+    - Just log back in.
+- Fix error handling to give proper error in case of expired token.
+```javascript
+const errorHandler = (error, request, response, next) => {
+    if (error.name === 'CastError') {
+        return response.status(400).send({
+            error: 'malformatted id'
+        });
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({
+            error: error.message
+        });
+    } else if (error.name === 'JsonWebTokenError') {
+        return response.status(401).json({
+            error: 'invalid token'
+        });
+    } else if (error.name === 'TokenExpiredError') {
+        return response.status(401).json({
+            error: 'token expired'
+        });
+    }
+
+    next(error);
+};
+```
+- The shorter the time, the safer it is.
+    - However, this means users log in more frequently.
+- Saving tokens in backend means that performance takes a hit.
+    - Token validity needs to be checked on every API request from DB.
+    - Sometimes best to save sessions corresponding to a key-value-database such as `Redis`.
+    - Fast in usage scenarios but limited compared to MongoDB.
+- Instead of using `Authorization` header, `cookies` are used for transferring token between client and server.
+
