@@ -344,3 +344,34 @@ usersRouter.get('/', async (request, response) => {
 }
 ```
 
+## Creating A New Note
+- Update code for creating new note.
+    - Assign user to created note.
+- Expand notesRouter:
+```javascript
+const User = require('../models/user');
+
+// ...
+
+notesRouter.post('/', async (request, response, next) => {
+    const body = request.body;
+
+    const user = await User.findById(body.userId);
+
+    const note = new Note({
+        content: body.content,
+        important: body.important === undefined ? false : body.important,
+        date: new Date(),
+        user: user._id
+    });
+
+    const savedNote = await note.save();
+    user.notes = user.notes.concat(savedNote._id);
+    await user.save();
+
+    response.json(savedNote);
+});
+```
+- Notice that the `user` object changes because we store the `id` of the note in the `notes` field of the user.
+- Create a new note and check both the `/api/users` and `/api/notes` url.
+
