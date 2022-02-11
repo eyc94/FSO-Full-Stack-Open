@@ -134,3 +134,31 @@ notesRouter.post('/', async (request, response) => {
     - `bearer eyJhbGciOiJIUzI1NiIsInR5c2VybmFtZSI6Im1sdXVra2FpIiwiaW`
     - Second value is token returned by login operation.
 
+## Error Handling
+- Can get a `JsonWebTokenError` if invalid token.
+- Extend error handling middleware to take into account the different decoding errors.
+```javascript
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' });
+};
+
+const errorHandler = (error, request, response, next) => {
+    if (error.name === 'CastError') {
+        return response.status(400).send({
+            error: 'malformatted id'
+        });
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({
+            error: error.message
+        });
+    } else if (error.name === 'JsonWebTokenError') {
+        return response.status(401).json({
+            error: 'invalid token'
+        });
+    }
+
+    logger.error(error.message);
+
+    next(error);
+};
+```
