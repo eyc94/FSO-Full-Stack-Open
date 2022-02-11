@@ -375,3 +375,58 @@ notesRouter.post('/', async (request, response, next) => {
 - Notice that the `user` object changes because we store the `id` of the note in the `notes` field of the user.
 - Create a new note and check both the `/api/users` and `/api/notes` url.
 
+## Populate
+- When an HTTP GET request is made to `/api/users`, we want it to populate the contents of the user's notes.
+    - In relational DB, this is done with `join query`.
+- Document DBs do not support join queries between collections.
+- Mongoose libraries can do joins for us.
+- The join queries in relational are **transactional**.
+    - State of DB doesn't change during queries.
+- The join queries in Mongoose are not, so they can be changed.
+- Mongoose join is done with `populate` method.
+- Update route that returns all users first:
+```javascript
+usersRouter.get('/', async (request, response) => {
+    const users = await User
+        .find({}).populate('notes');
+    
+    response.json(users);
+})
+```
+- The `populate` method is chained after the `find` method.
+    - Parameter of populate method says that the ids referencing note objects in the `notes` field of the user will be replaced by the referenced `note` documents.
+- Can choose what fields to display with Mongo syntax:
+```javascript
+usersRouter.get('/', async (request, response) => {
+    const users = await User
+        .find({}).populate('notes', { content: 1, date: 1 });
+
+    response.json(users);
+});
+```
+- Can also add a suitable population of user info to notes:
+```javascript
+notesRouter.get('/', async (request, response) => {
+    const notes = await Note
+        .find({}).populate('user', { username: 1, name: 1 });
+
+    response.json(notes);
+});
+```
+- DB does not know that the ids in the `user` field of notes reference documents in user collection.
+- This is because we have defined "types" to the references in the Mongoose schema with the `ref` option.
+```javascript
+const noteSchema = new mongoose.Schema({
+    content: {
+        type: String,
+        required: true,
+        minLength: 5
+    },
+    date: Date,
+    important: Boolean,
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
+});
+```
