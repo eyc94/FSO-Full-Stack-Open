@@ -369,7 +369,6 @@ usersRouter.get('/', async (request, response) => {
 - Send a POST request to `/api/users/` via Postman when making new users in the format:
 ```json
 {
-    "notes": [],
     "username": "root",
     "name": "Superuser",
     "password": "salainen"
