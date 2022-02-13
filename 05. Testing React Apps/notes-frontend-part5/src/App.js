@@ -65,7 +65,7 @@ const App = () => {
         ? notes
         : notes.filter(note => note.important);
 
-    const handleLogin = (event) => {
+    const handleLogin = async (event) => {
         event.preventDefault();
         try {
             const user = await loginService.login({
