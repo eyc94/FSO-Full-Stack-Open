@@ -120,14 +120,22 @@ const App = () => {
         </form>
     );
 
+    const logUserOut = (event) => {
+        window.localStorage.removeItem('loggedNoteappUser');
+        setUser(null);
+    };
+
     const noteForm = () => (
-        <form onSubmit={addNote}>
-            <input
-                value={newNote}
-                onChange={handleNoteChange}
-            />
-            <button type="submit">save</button>
-        </form>
+        <>
+            <form onSubmit={addNote}>
+                <input
+                    value={newNote}
+                    onChange={handleNoteChange}
+                />
+                <button type="submit">save</button>
+            </form>
+            <button onClick={logUserOut}>logout</button>
+        </>
     );
 
     return (
