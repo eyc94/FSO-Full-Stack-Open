@@ -275,3 +275,80 @@ return (
 - Main component is way too large.
 - Consider making sub components and making this smaller.
 
+## Creating New Notes
+- Token returned with a successful login is saved to app's state.
+    - The `user`'s field `token`.
+```javascript
+const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+        const user = await loginService.login({
+            username, password
+        });
+
+        setUser(user);
+        setUsername('');
+        setPasword('');
+    } catch (exception) {
+        // ...
+    }
+};
+```
+- Fix creating new notes so it works with backend.
+- Add token of logged-in user to Authorization header of HTTP request.
+- Change the `noteService` module like so:
+```javascript
+import axios from 'axios';
+const baseUrl = '/api/notes';
+
+let token = null;
+
+const setToken = newToken => {
+    token = `bearer ${newToken}`;
+};
+
+const getAll = () => {
+    const request = axios.get(baseUrl);
+    return request.then(response => response.data);
+};
+
+const create = async newObject => {
+    const config = {
+        headers: { Authorization: token }
+    };
+
+    const response = await axios.post(baseUrl, newObject, config);
+    return response.data;
+};
+
+const update = (id, newObject) => {
+    const request = axios.put(`${baseUrl}/${id}`, newObject);
+    return request.then(response => response.data);
+};
+
+export default { getAll, create, update, setToken };
+```
+- There is a private variable that is called `token`.
+- The value is changed by the `setToken` function.
+- The `create` function now sets the token to the `Authorization` header with async/await syntax.
+- Header is given as third parameter of the post method.
+- Event handler is now changed to call the method `noteService.setToken(user.token)` with a successful login.
+```javascript
+const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+        const user = await loginService.login({
+            username, password
+        });
+
+        noteService.setToken(user.token);
+        setUser(user);
+        setUsername('');
+        setPasword('');
+    } catch (exception) {
+        // ...
+    }
+};
+```
+- Adding new notes work now!
+
