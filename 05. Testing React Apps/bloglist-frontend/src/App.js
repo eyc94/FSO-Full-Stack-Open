@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import Blog from './components/Blog';
+import Notification from './components/Notification';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
 const App = () => {
     const [blogs, setBlogs] = useState([]);
+    const [message, setMessage] = useState(null);
+    const [messageState, setMessageState] = useState('error');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [user, setUser] = useState(null);
@@ -38,6 +41,11 @@ const App = () => {
             .create(blogObject)
             .then(returnedBlog => {
                 setBlogs(blogs.concat(returnedBlog));
+                setMessage(`a new blog: ${title} by ${author} added`);
+                setTimeout(() => {
+                    setMessage(null);
+                }, 5000);
+                setMessageState('success');
                 setTitle('');
                 setAuthor('');
                 setUrl('');
@@ -46,7 +54,6 @@ const App = () => {
 
     const handleLogin = async (event) => {
         event.preventDefault();
-
         try {
             const user = await loginService.login({
                 username, password
@@ -57,16 +64,21 @@ const App = () => {
             );
             blogService.setToken(user.token);
             setUser(user);
-            setUsername('');
-            setPassword('');
         } catch (exception) {
-            console.log('wrong credentials');
+            setMessage(`Wrong username or password`);
+            setTimeout(() => {
+                setMessage(null);
+            }, 5000);
+            setMessageState('error');
         }
+        setUsername('');
+        setPassword('');
     };
 
     const loginForm = () => (
         <div>
             <h2>Log In To The Application</h2>
+            <Notification message={message} result={messageState} />
             <form onSubmit={handleLogin}>
                 <div>
                     username
@@ -135,6 +147,7 @@ const App = () => {
                 loginForm() :
                 <div>
                     <h2>Blogs</h2>
+                    <Notification message={message} result={messageState} />
                     <p>{user.name} logged in
                         <button onClick={userLogout}>Logout</button>
                     </p>
