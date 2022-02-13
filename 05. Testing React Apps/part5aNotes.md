@@ -444,3 +444,19 @@ window.localStorage.removeItem('loggedNoteappUser');
 ```javascript
 window.localStorage.clear();
 ```
+
+## A Note On Using Local Storage
+- It was mentioned that there is a challenge in storing tokens.
+- When should tokens be revoked?
+    - We can set a time limit to a token.
+    - We can also save the information in the backend (server side session).
+- Saving token in local storage poses risks in security.
+    - Allows `Cross Site Scripting (XSS)`.
+    - Allows user to inject random JS code.
+    - React sanitizes all text so it should be okay.
+- Best option is to not store token in local storage.
+- Suggested that identity of a signed user be saved as `httpOnly cookies`.
+    - Drawback is that implementing SPA-apps is more complex.
+    - However, use of this does not guarantee anything.
+    - Most say it's the same as using local storage.
+- The idea is to **minimize** the risk of XSS attacks.
