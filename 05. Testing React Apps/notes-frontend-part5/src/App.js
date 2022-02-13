@@ -83,7 +83,7 @@ const App = () => {
         }
     };
 
-    const loginForm = () => {
+    const loginForm = () => (
         <form onSubmit={handleLogin}>
             <div>
                 username
@@ -105,9 +105,9 @@ const App = () => {
             </div>
             <button type="submit">login</button>
         </form>
-    };
+    );
 
-    const noteForm = () => {
+    const noteForm = () => (
         <form onSubmit={addNote}>
             <input
                 value={newNote}
@@ -115,7 +115,7 @@ const App = () => {
             />
             <button type="submit">save</button>
         </form>
-    };
+    );
 
     return (
         <div>
