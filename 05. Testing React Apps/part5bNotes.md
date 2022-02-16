@@ -92,3 +92,91 @@ const App = () => {
 - We use inline style rule to make the `display` property `none` if we do not want to show component.
 - We use ternary operator.
 
+## The Components Children, AKA. props.children
+- Code for visibility is considered its own logical entity.
+- Extract to its own module.
+- Implement a `Togglable` component:
+```javascript
+<Togglable buttonLabel='login'>
+    <LoginForm
+        username={username}
+        password={password}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        handleSubmit={handleLogin}
+    />
+</Togglable>
+```
+- Notice the closing tag for `Togglable` is different than `LoginForm`.
+- Notice `Togglable` wraps `LoginForm`.
+    - So `LoginForm` is a child of `Togglable`.
+- Can put any React elements between the `Togglable` tags.
+```javascript
+<Togglable buttonLabel='reveal'>
+    <p>this line is at start hidden</p>
+    <p>also this is hidden</p>
+</Togglable>
+```
+- Code for `Togglable` component:
+```javascript
+import { useState } from 'react';
+
+const Togglable = (props) => {
+    const [visible, setVisible] = useState(false);
+
+    const hideWhenVisible = { display: visible ? 'none' : '' };
+    const showWhenVisible = { display: visible ? '' : 'none' };
+
+    const toggleVisibility = () => {
+        setVisible(!visible);
+    };
+
+    return (
+        <div>
+            <div style={hideWhenVisible}>
+                <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+            </div>
+            <div style={showWhenVisible}>
+                {props.children}
+                <button onClick={toggleVisibility}>cancel</button>
+            </div>
+        </div>
+    );
+};
+
+export default Togglable;
+```
+- So `props.children` is used for referencing the child components of the component.
+- Child components are the React components we define in the opening and closing tags.
+- So the children are rendered in the code that is used for rendering the component itself.
+- `children` is automatically added by React and always exists.
+    - If component is closed with auto closing tag `/>`, `props.children` is empty.
+- `Togglable` is reusable and we can use for form that is used to create notes.
+- Extract the form to another component first:
+```javascript
+const NoteForm = ({ onSubmit, handleChange, value }) => {
+    return (
+        <div>
+            <h2>Create a new note</h2>
+
+            <form onSubmit={onSubmit}>
+                <input
+                    value={value}
+                    onChange={handleChange}
+                />
+                <button type="submit">save</button>
+            </form>
+        </div>
+    );
+};
+```
+- Define form component inside of `Togglable` component:
+```javascript
+<Togglable buttonLabel="new note">
+    <NoteForm
+        onSubmit={addNote}
+        value={newNote}
+        handleChange={handleNoteChange}
+    />
+</Togglable>
+```
