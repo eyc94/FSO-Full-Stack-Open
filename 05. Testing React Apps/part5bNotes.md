@@ -180,3 +180,76 @@ const NoteForm = ({ onSubmit, handleChange, value }) => {
     />
 </Togglable>
 ```
+
+## State of the Forms
+- State is currently in the `App` component.
+- React docs say where to place state:
+    - **Often, several components need to reflect the same changing data. We recommend lifting the shared state up to their closest common ancestor.**
+- Think of the state of the form.
+    - Creating new notes.
+    - Handled originally in the `App` component but it doesn't use it.
+    - Just move it to the corresponding components.
+```javascript
+import { useState } from 'react';
+
+const NoteForm = ({ createNote }) => {
+    const [newNote, setNewNote] = useState('');
+
+    const handleChange = (event) => {
+        setNewNote(event.target.value);
+    };
+
+    const addNote = (event) => {
+        event.preventDefault();
+        createNote({
+            content: newNote,
+            important: Math.random() > 0.5
+        });
+
+        setNewNote('');
+    };
+
+    return (
+        <div>
+            <h2>Create a new note</h2>
+
+            <form onSubmit={addNote}>
+                <input
+                    value={newNote}
+                    onChange={handleChange}
+                />
+                <button type="submit">save</button>
+            </form>
+        </div>
+    );
+};
+
+export default NoteForm;
+```
+- `newNote` state is moved from `App` to the note form component.
+- There is one prop left, `createNote`.
+    - Form calls this when new note is created.
+- `App` component is simpler.
+- The `addNote` function receives a new note as a parameter and function is the only prop we send to form.
+```javascript
+const App = () => {
+    // ...
+    const addNote = (noteObject) => {
+        noteService
+            .create(noteObject)
+            .then(returnedNote => {
+                setNotes(notes.concat(returnedNote));
+            });
+    };
+    // ...
+    const noteForm = () => {
+        <Togglable buttonLabel='new note'>
+            <NoteForm createNote={addNote} />
+        </Togglable>
+    };
+
+    // ...
+};
+```
+- Can do the same for the login form.
+
