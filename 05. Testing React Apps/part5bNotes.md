@@ -343,3 +343,28 @@ const App = () => {
     - Take a look at Part 7.
 - There are other use cases for refs than accessing React components.
 
+## One Point About Components
+- When we define components in React:
+```javascript
+const Togglable = () => {
+    // ...
+};
+```
+- And we use it like this:
+```javascript
+<div>
+    <Togglable buttonLabel="1" ref={togglable1}>
+        first
+    </Togglable>
+
+    <Togglable buttonLabel="2" ref={togglable2}>
+        second
+    </Togglable>
+
+    <Togglable buttonLabel="3" ref={togglable3}>
+        third
+    </Togglable>
+</div>
+```
+- We create 3 separate instances of component that all have their own separate state.
+- `ref` attribute is used for assigning a reference to each components in variables `togglable1`, `togglable2`, and `togglable3`.
