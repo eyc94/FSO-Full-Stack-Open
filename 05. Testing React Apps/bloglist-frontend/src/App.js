@@ -105,39 +105,6 @@ const App = () => {
         </div>
     );
 
-    const blogForm = () => (
-        <form onSubmit={addBlog}>
-            <div>
-                title:
-                <input
-                    type="text"
-                    value={title}
-                    name="Title"
-                    onChange={({ target }) => setTitle(target.value)}
-                />
-            </div>
-            <div>
-                author:
-                <input
-                    type="text"
-                    value={author}
-                    name="Author"
-                    onChange={({ target }) => setAuthor(target.value)}
-                />
-            </div>
-            <div>
-                url:
-                <input
-                    type="text"
-                    value={url}
-                    name="Url"
-                    onChange={({ target }) => setUrl(target.value)}
-                />
-            </div>
-            <button type="submit">Create</button>
-        </form>
-    );
-
     const userLogout = () => {
         window.localStorage.removeItem('loggedBlogappUser');
         setUser(null);
@@ -153,7 +120,6 @@ const App = () => {
                     <p>{user.name} logged in
                         <button onClick={userLogout}>Logout</button>
                     </p>
-                    {/* {blogForm()} */}
                     <Togglable buttonLabel="new blog">
                         <BlogForm
                             onSubmit={addBlog}
