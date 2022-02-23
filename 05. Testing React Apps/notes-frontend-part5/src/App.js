@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Note from './components/Note';
 import Notification from './components/Notification';
 import Footer from './components/Footer';
@@ -92,6 +92,12 @@ const App = () => {
         setUser(null);
     };
 
+    const noteForm = () => (
+        <Togglable buttonLabel="new note">
+            <NoteForm createNote={addNote} />
+        </Togglable>
+    );
+
     return (
         <div>
             <h1>Notes</h1>
@@ -109,9 +115,7 @@ const App = () => {
                 </Togglable> :
                 <div>
                     <p>{user.name} logged in</p>
-                    <Togglable buttonLabel="new note">
-                        <NoteForm createNote={addNote} />
-                    </Togglable>
+                    {noteForm()}
                     <button onClick={logUserOut}>logout</button>
                 </div>
             }
