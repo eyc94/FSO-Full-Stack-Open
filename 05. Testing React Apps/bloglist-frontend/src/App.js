@@ -34,7 +34,7 @@ const App = () => {
             .create(blogObject)
             .then(returnedBlog => {
                 setBlogs(blogs.concat(returnedBlog));
-                setMessage(`a new blog: ${title} by ${author} added`);
+                setMessage(`a new blog: ${returnedBlog.title} by added ${returnedBlog.author}`);
                 setTimeout(() => {
                     setMessage(null);
                 }, 5000);
