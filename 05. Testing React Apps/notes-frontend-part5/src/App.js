@@ -16,7 +16,6 @@ const App = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [user, setUser] = useState(null);
-    const [loginVisible, setLoginVisible] = useState(false);
 
     useEffect(() => {
         noteService
@@ -100,46 +99,10 @@ const App = () => {
         }
     };
 
-    // const loginForm = () => {
-    //     const hideWhenVisible = { display: loginVisible ? 'none' : '' };
-    //     const showWhenVisible = { display: loginVisible ? '' : 'none' };
-
-    //     return (
-    //         <div>
-    //             <div style={hideWhenVisible}>
-    //                 <button onClick={() => setLoginVisible(true)}>log in</button>
-    //             </div>
-    //             <div style={showWhenVisible}>
-    //                 <LoginForm
-    //                     username={username}
-    //                     password={password}
-    //                     handleUsernameChange={({ target }) => setUsername(target.value)}
-    //                     handlePasswordChange={({ target }) => setPassword(target.value)}
-    //                     handleSubmit={handleLogin}
-    //                 />
-    //                 <button onClick={() => setLoginVisible(false)}>cancel</button>
-    //             </div>
-    //         </div>
-    //     );
-    // };
-
     const logUserOut = (event) => {
         window.localStorage.removeItem('loggedNoteappUser');
         setUser(null);
     };
-
-    const noteForm = () => (
-        <>
-            <form onSubmit={addNote}>
-                <input
-                    value={newNote}
-                    onChange={handleNoteChange}
-                />
-                <button type="submit">save</button>
-            </form>
-            <button onClick={logUserOut}>logout</button>
-        </>
-    );
 
     return (
         <div>
@@ -165,6 +128,7 @@ const App = () => {
                             handleChange={handleNoteChange}
                         />
                     </Togglable>
+                    <button onClick={logUserOut}>logout</button>
                 </div>
             }
 
