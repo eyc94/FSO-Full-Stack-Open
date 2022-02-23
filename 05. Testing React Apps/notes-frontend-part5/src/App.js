@@ -92,8 +92,9 @@ const App = () => {
         setUser(null);
     };
 
+    const noteFormRef = useRef();
     const noteForm = () => (
-        <Togglable buttonLabel="new note">
+        <Togglable buttonLabel="new note" ref={noteFormRef}>
             <NoteForm createNote={addNote} />
         </Togglable>
     );
