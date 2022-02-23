@@ -6,6 +6,7 @@ import noteService from './services/notes';
 import loginService from './services/login';
 import LoginForm from './components/LoginForm';
 import Togglable from './components/Togglable';
+import NoteForm from './components/NoteForm';
 
 const App = () => {
     const [notes, setNotes] = useState([]);
@@ -145,15 +146,25 @@ const App = () => {
             <h1>Notes</h1>
             <Notification message={errorMessage} />
 
-            <Togglable buttonLabel='login'>
-                <LoginForm
-                    username={username}
-                    password={password}
-                    handleUsernameChange={({ target }) => setUsername(target.value)}
-                    handlePasswordChange={({ target }) => setPassword(target.value)}
-                    handleSubmit={handleLogin}
-                />
-            </Togglable>
+            {user === null ?
+                <Togglable buttonLabel='login'>
+                    <LoginForm
+                        username={username}
+                        password={password}
+                        handleUsernameChange={({ target }) => setUsername(target.value)}
+                        handlePasswordChange={({ target }) => setPassword(target.value)}
+                        handleSubmit={handleLogin}
+                    />
+                </Togglable> :
+
+                <Togglable buttonLabel="new note">
+                    <NoteForm
+                        onSubmit={addNote}
+                        value={newNote}
+                        handleChange={handleNoteChange}
+                    />
+                </Togglable>
+            }
 
             <div>
                 <button onClick={() => setShowAll(!showAll)}>
