@@ -156,14 +156,16 @@ const App = () => {
                         handleSubmit={handleLogin}
                     />
                 </Togglable> :
-
-                <Togglable buttonLabel="new note">
-                    <NoteForm
-                        onSubmit={addNote}
-                        value={newNote}
-                        handleChange={handleNoteChange}
-                    />
-                </Togglable>
+                <div>
+                    <p>{user.name} logged in</p>
+                    <Togglable buttonLabel="new note">
+                        <NoteForm
+                            onSubmit={addNote}
+                            value={newNote}
+                            handleChange={handleNoteChange}
+                        />
+                    </Togglable>
+                </div>
             }
 
             <div>
