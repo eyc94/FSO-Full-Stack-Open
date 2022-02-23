@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import noteService from './services/notes';
 import loginService from './services/login';
 import LoginForm from './components/LoginForm';
+import Togglable from './components/Togglable';
 
 const App = () => {
     const [notes, setNotes] = useState([]);
@@ -144,13 +145,15 @@ const App = () => {
             <h1>Notes</h1>
             <Notification message={errorMessage} />
 
-            {user === null ?
-                loginForm() :
-                <div>
-                    <p>{user.name} logged-in</p>
-                    {noteForm()}
-                </div>
-            }
+            <Togglable buttonLabel='login'>
+                <LoginForm
+                    username={username}
+                    password={password}
+                    handleUsernameChange={({ target }) => setUsername(target.value)}
+                    handlePasswordChange={({ target }) => setPassword(target.value)}
+                    handleSubmit={handleLogin}
+                />
+            </Togglable>
 
             <div>
                 <button onClick={() => setShowAll(!showAll)}>
