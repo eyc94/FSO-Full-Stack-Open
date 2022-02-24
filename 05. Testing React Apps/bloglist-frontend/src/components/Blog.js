@@ -1,5 +1,3 @@
-import react from 'react';
-
 const Blog = ({ blog }) => {
     const blogStyle = {
         paddingTop: 10,
