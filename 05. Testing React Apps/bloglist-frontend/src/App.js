@@ -115,6 +115,28 @@ const App = () => {
         );
     };
 
+    const removeBlog = async (blogToDelete) => {
+        try {
+            if (window.confirm(`Remove blog: ${blogToDelete.title} by ${blogToDelete.author}?`)) {
+                blogService
+                    .remove(blogToDelete.id)
+                setMessage(`Blog: ${blogToDelete.title} was removed`);
+                setBlogs(blogs.filter(blog => blog.id !== blogToDelete.id));
+                setMessageState('success');
+                setTimeout(() => {
+                    setMessage(null);
+                }, 5000);
+            }
+
+        } catch (Exception) {
+            setMessageState(`Cannot delete blog: ${blogToDelete.title}`);
+            setMessageState('error');
+            setTimeout(() => {
+                setMessage(null);
+            }, 5000);
+        }
+    };
+
     return (
         <div>
             {user === null ?
@@ -127,7 +149,7 @@ const App = () => {
                     </p>
                     {blogForm()}
                     {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-                        <Blog key={blog.id} blog={blog} handleLike={() => handleLike(blog)} />
+                        <Blog key={blog.id} user={user} blog={blog} handleLike={() => handleLike(blog)} handleRemove={() => removeBlog(blog)} />
                     )}
                 </div>
             }
