@@ -11,7 +11,7 @@ const Footer = () => {
             <br />
             <em>Note App, Eric Chin 2022</em>
         </div>
-    )
+    );
 };
 
 export default Footer;

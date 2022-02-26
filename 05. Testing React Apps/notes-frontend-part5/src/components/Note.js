@@ -8,7 +8,7 @@ const Note = ({ note, toggleImportance }) => {
             {note.content}
             <button onClick={toggleImportance}>{label}</button>
         </li>
-    )
+    );
 };
 
 export default Note;
