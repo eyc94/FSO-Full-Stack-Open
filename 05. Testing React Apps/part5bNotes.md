@@ -368,3 +368,44 @@ const Togglable = () => {
 ```
 - We create 3 separate instances of component that all have their own separate state.
 - `ref` attribute is used for assigning a reference to each components in variables `togglable1`, `togglable2`, and `togglable3`.
+
+## PropTypes
+- `Togglable` component assumes `buttonLabel` attribute is given on its call.
+    - If forgotten, it just creates a small button with no text in it.
+- Can enforce that the `buttonLabel` is defined.
+- Expected and required props of component are defined with `prop-types` package.
+    - Install it:
+```
+npm install prop-types
+```
+- Define `buttonLabel` prop as a mandatory or `required` string-type prop:
+```javascript
+import PropTypes from 'prop-types';
+
+const Togglable = React.forwardRef((props, ref) => {
+    // ...
+});
+
+Togglable.propTypes = {
+    buttonLabel: PropTypes.string.isRequired
+};
+```
+- Console displays red error message if `buttonLabel` is left undefined.
+- Define PropTypes to `LoginForm` component as well:
+```javascript
+import PropTypes from 'prop-types';
+
+const LoginForm = ({ handleSubmit, handleUsernameChange, handlePasswordChange, username, password }) => {
+    // ...
+};
+
+LoginForm.propTypes = {
+    handleSubmit: PropTypes.func.isRequired,
+    handleUsernameChange: PropTypes.func.isRequired,
+    handlePasswordChange: PropTypes.func.isRequired,
+    username: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired
+};
+```
+- If type of prop is wrong, an error will also be thrown.
+
