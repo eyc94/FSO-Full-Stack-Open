@@ -21,11 +21,13 @@ const Togglable = (props) => {
                 <button onClick={toggleVisibility}>cancel</button>
             </div>
         </div>
-    )
+    );
 };
 
 Togglable.PropTypes = {
     buttonLabel: PropTypes.string.isRequired
 };
+
+Togglable.displayName = 'Togglable';
 
 export default Togglable;

@@ -61,7 +61,7 @@ const App = () => {
             blogService.setToken(user.token);
             setUser(user);
         } catch (exception) {
-            setMessage(`Wrong username or password`);
+            setMessage('Wrong username or password');
             setTimeout(() => {
                 setMessage(null);
             }, 5000);
@@ -119,7 +119,7 @@ const App = () => {
         try {
             if (window.confirm(`Remove blog: ${blogToDelete.title} by ${blogToDelete.author}?`)) {
                 blogService
-                    .remove(blogToDelete.id)
+                    .remove(blogToDelete.id);
                 setMessage(`Blog: ${blogToDelete.title} was removed`);
                 setBlogs(blogs.filter(blog => blog.id !== blogToDelete.id));
                 setMessageState('success');
