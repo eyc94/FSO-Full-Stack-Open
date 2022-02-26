@@ -409,3 +409,116 @@ LoginForm.propTypes = {
 ```
 - If type of prop is wrong, an error will also be thrown.
 
+## ESlint
+- Used `ESlint` code style in Part 3 for backend.
+- Use it for frontend too.
+- `create-react-app` has ESlint installed to project by default.
+    - Just tweak configs in `.eslintrc.js` file.
+- Don't run `eslint --init` command because it installs latest version of ESlint that is not compatible.
+- Start testing frontend.
+    - Install the `eslint-plugin-test` package to avoid linter errors.
+```
+npm install --save-dev eslint-plugin-jest
+```
+- Create `.eslintrc.js` with the following:
+```javascript
+/* eslint-env node */
+module.exports = {
+    "env": {
+        "browser": true,
+        "es6": true,
+        "jest/globals": true 
+    },
+    "extends": [ 
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react", "jest"
+    ],
+    "rules": {
+        "indent": [
+            "error",
+            2  
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "never"
+        ],
+        "eqeqeq": "error",
+        "no-trailing-spaces": "error",
+        "object-curly-spacing": [
+            "error", "always"
+        ],
+        "arrow-spacing": [
+            "error", { "before": true, "after": true }
+        ],
+        "no-console": 0,
+        "react/prop-types": 0,
+        "react/react-in-jsx-scope": "off"
+    },
+    "settings": {
+        "react": {
+        "version": "detect"
+        }
+    }
+};
+```
+- If using VSCode with ESLint plugin, you might need to add additional workspace setting to work.
+- If you see `Failed to load plugin react: Cannot find module 'eslint-plugin-react'`, additional config is needed.
+    - Add the line `"eslint.workingDirectories": [{ "mode": "auto" }]` to `settings.json` in workspace seems to fix it.
+- Create `.eslintignore` with the following:
+```
+node_modules
+build
+.eslintrc.js
+```
+- Add npm script:
+```javascript
+{
+    // ...
+    {
+        "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "server": "json-server -p3001 db.json",
+        "eslint": "eslint ."
+    },
+    // ...
+}
+```
+- The component `Togglable` causes a nasty looking warning: `Component definition is missing display name`.
+- React dev tools also shows that component has no name.
+    - Easy fix:
+```javascript
+import { useState, useImperativeHandle } from 'react';
+import PropTypes from 'prop-types';
+
+const Togglable = React.forwardRef((props, ref) => {
+    // ...
+});
+
+Togglable.displayName = 'Togglable';
+
+export default Togglable;
+```
+- The `create-react-app` has its own default config of ESLint.
+    - We overrid it.
+    - Documentations mention that it is ok to replace default but does not encourage it.
