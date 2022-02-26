@@ -21,7 +21,7 @@ const Togglable = (props) => {
                 <button onClick={toggleVisibility}>cancel</button>
             </div>
         </div>
-    )
+    );
 };
 
 Togglable.PropTypes = {
