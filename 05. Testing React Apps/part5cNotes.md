@@ -58,3 +58,19 @@ test('renders content', () => {
     - Use the `screen` object's method `getByText` to search for an element that has the content and makes sure it exists.
 
 
+## Running Tests
+- Using `create-react-app` configures tests to be run in watch mode by default.
+    - `npm test` command does not exist once test is finished.
+    - It waits for changes to be made to the code.
+    - Tests auto execute after changes are made to code.
+    - Then the cycle repeats.
+- If you want tests to run normally, use this:
+```
+CI=true npm test
+```
+- Console may issue warning if Watchman is not installed.
+    - Developed by Facebook.
+    - Watches for changes made to files.
+    - Speeds up execution of tests.
+
+
