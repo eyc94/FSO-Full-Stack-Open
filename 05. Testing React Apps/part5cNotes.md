@@ -199,3 +199,54 @@ test('renders content', () => {
 ```
 
 
+## Clicking Buttons In Tests
+- The `Note` component also makes sure that when the button is pressed, the `toggleImportance` event handler is called.
+- Install the library `user-event`.
+    - Simulate user input.
+```
+npm install --save-dev @testing-library/user-event
+```
+- There is a mismatch between version of a dependency `jest-watch-typeahead` that `create-react-app` and `user-event` uses.
+    - Problem fixed by installing specific version:
+```
+npm install -D --exact jest-watch-typeahead@0.6.5
+```
+- Testing functionality is done like so:
+```javascript
+import React from 'react';
+import '@testing-library/jest-dom/extend-expect';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import Note from './Note';
+
+// ...
+
+test('clicking the button calls event handler once', async () => {
+    const note = {
+        content: 'Component testing is done with react-testing-library',
+        important: true
+    };
+
+    const mockHandler = jest.fn();
+
+    render(
+        <Note note={note} toggleImportance={mockHandler} />
+    );
+
+    const button = screen.getByText('make not important');
+    userEvent.click(button);
+
+    expect(mockHandler.mock.calls).toHaveLength(1);
+});
+```
+- Event handler is a `mock` function defined with Jest.
+- Test finds button based on text from rendered component.
+    - Then clicks element.
+    - Clicking happens with `click` method of `userEvent` library.
+- The expectation is that the mock function is called exactly once.
+- Mock objects and functions are used for replacing dependencies of components tested.
+    - Mocks make it possible to return hardcoded responses.
+    - Mock verifies number of times mock functions are called and with what parameters.
+- Mock is used to see if called method gets called exactly once.
+
+
