@@ -27,7 +27,7 @@ const LoginForm = ({ handleSubmit, handleUsernameChange, handlePasswordChange, u
     );
 };
 
-LoginForm.PropTypes = {
+LoginForm.propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     handleUsernameChange: PropTypes.func.isRequired,
     handlePasswordChange: PropTypes.func.isRequired,
