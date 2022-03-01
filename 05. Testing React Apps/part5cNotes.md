@@ -592,3 +592,12 @@ test('renders no shit', () => {
 ```
 
 
+## Test Coverage
+- Find out `coverage` of tests by running command:
+```
+CI=true npm test -- --coverage
+```
+- Primitive HTML report shows to the `coverage/lcov-report` folder.
+- Report tells us lines of untested code in each component.
+
+
