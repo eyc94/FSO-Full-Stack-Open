@@ -338,3 +338,80 @@ describe('<Togglable />', () => {
 ```
 
 
+## Testing The Forms
+- We have used the `click` method of `user-event` to click buttons.
+```javascript
+const button = screen.getByText('show...');
+userEvent.click(button);
+```
+- Simulate text input with `userEvent`.
+- Make test for `NoteForm` component.
+    - Code for component is as follows:
+```javascript
+import { useState } from 'react';
+
+const NoteForm = ({ createNote }) => {
+    const [newNote, setNewNote] = useState('');
+
+    const handleChange = (event) => {
+        setNewNote(event.target.value);
+    };
+
+    const addNote = (event) => {
+        event.preventDefault();
+        createNote({
+            content: newNote,
+            important: Math.random() > 0.5
+        });
+
+        setNewNote('');
+    };
+
+    return (
+        <div className="formDiv">
+            <h2>Create a new note</h2>
+
+            <form onSubmit={addNote}>
+                <input
+                    value={newNote}
+                    onChange={handleChange}
+                />
+                <button type="submit">save</button>
+            </form>
+        </div>
+    );
+};
+
+export default NoteForm;
+```
+- Form works by calling `createNote` function received as prop.
+- Test is as follows:
+```javascript
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import NoteForm from './NoteForm';
+import userEvent from '@testing-library/user-event';
+
+test('<NoteForm /> updates parent state and calls onSubmit', () => {
+    const createNote = jest.fn();
+
+    render(<NoteForm createNote={createNote} />);
+
+    const input = screen.getByRole('textbox');
+    const sendButton = screen.getByText('save');
+
+    userEvent.type(input, 'testing a form...');
+    userEvent.click(sendButton);
+
+    expect(createNote.mock.calls).toHaveLength(1);
+    expect(createNote.mock.calls[0][0].content).toBe('testing a form...');
+});
+```
+- Tests gets access to input field by using `getByRole`.
+- The method `type` of `userEvent` is used to write text to input field.
+- First test ensures that submitting form calls `createNote`.
+- The second expectation checks to see if event handler is called with correct parameters.
+    - Note with correct content is created when form is filled.
+
+
