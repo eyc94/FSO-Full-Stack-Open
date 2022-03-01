@@ -74,3 +74,10 @@ CI=true npm test
     - Speeds up execution of tests.
 
 
+## Test File Location
+- Two conventions for test file location.
+- Right now, we created test files according to current standard.
+    - Place in same location as component being tested.
+- Other convention is to store in separate directory.
+
+
