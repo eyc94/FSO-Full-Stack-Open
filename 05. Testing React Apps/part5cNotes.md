@@ -157,7 +157,9 @@ test('renders content', () => {
 console.log
     <body>
         <div>
-            <li class="note">
+            <li
+                class="note"
+            >
                 Component testing is done with react-testing-library
                 <button>
                     make not important
@@ -190,7 +192,9 @@ test('renders content', () => {
 ```
 - Now HTML of wanted element is printed:
 ```javascript
-<li class="note">
+<li
+    class="note"
+>
     Component testing is done with react-testing-library
     <button>
         make not important
