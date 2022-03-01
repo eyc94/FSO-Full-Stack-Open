@@ -81,3 +81,51 @@ CI=true npm test
 - Other convention is to store in separate directory.
 
 
+## Searching For Content In A Component
+- The react-testing-library package offers many ways to see content of component being tested.
+- Don't really need the `expect` test in our file.
+```javascript
+import React from 'react';
+import '@testing-library/jest-dom/extend-expect';
+import { render, screen } from '@testing-library/react';
+import Note from './Note';
+
+test('renders content', () => {
+    const note = {
+        content: 'Component testing is done with react-testing-library',
+        important: true
+    };
+
+    render(<Note note={note} />);
+
+    const element = screen.getByText('Component testing is done with react-testing-library');
+    expect(element).toBeDefined();
+});
+```
+- The test fails if `getByText` does not find the element it is looking for.
+- Can use `CSS-selectors` to find rendered elements by using method `querySelector` of object `container`.
+    - `container` is a field returned by render.
+```javascript
+import React from 'react';
+import '@testing-library/jest-dom/extend-expect';
+import { render, screen } from '@testing-library/react';
+import Note from './Note';
+
+test('renders content', () => {
+    const note = {
+        content: 'Component testing is done with react-testing-library',
+        important: true
+    };
+
+    const { container } = render(<Note note ={note} />);
+
+    const div = container.querySelector('.note');
+    expect(div).toHaveTextContent(
+        'Component testing is done with react-testing-library'
+    );
+});
+```
+- There are other methods like `getByTestId`.
+    - Looks for elements based on id-attributes inserted for testing.
+
+
