@@ -26,5 +26,5 @@ test('renders content', () => {
     const { container } = render(<Blog blog={blog} user={user} />);
 
     const div = container.querySelector('.contents');
-    expect(div).toHaveTextContent('Blog title Tony Stark');
+    expect(div).toHaveTextContent(`${blog.title} ${blog.author}`);
 });
