@@ -33,4 +33,15 @@ describe('<Togglable />', () => {
         const div = container.querySelector('.togglableContent');
         expect(div).not.toHaveStyle('display: none');
     });
+
+    test('toggled content can be closed', () => {
+        const button = screen.getByText('show...');
+        userEvent.click(button);
+
+        const closeButton = screen.getByText('cancel');
+        userEvent.click(closeButton);
+
+        const div = container.querySelector('.togglableContent');
+        expect(div).toHaveStyle('display: none');
+    });
 });
