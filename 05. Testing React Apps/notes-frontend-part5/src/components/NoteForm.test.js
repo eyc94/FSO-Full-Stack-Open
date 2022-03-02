@@ -9,7 +9,7 @@ test('<NoteForm /> updates parent state and calls onSubmit', () => {
 
     render(<NoteForm createNote={createNote} />);
 
-    const input = screen.getByRole('textbox');
+    const input = screen.getByPlaceholderText('write here note content');
     const sendButton = screen.getByText('save');
 
     userEvent.type(input, 'testing a form...');
