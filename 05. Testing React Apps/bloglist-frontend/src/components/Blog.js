@@ -22,7 +22,7 @@ const Blog = ({ blog, user, handleLike, handleRemove }) => {
     return (
         <div>
             <div style={hideWhenShown}>
-                <div style={blogStyle}>
+                <div className='contents' style={blogStyle}>
                     {blog.title} {blog.author} <button onClick={viewHandler}>view</button>
                 </div>
             </div>
