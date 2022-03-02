@@ -18,15 +18,3 @@ test('<NoteForm /> updates parent state and calls onSubmit', () => {
     expect(createNote.mock.calls).toHaveLength(1);
     expect(createNote.mock.calls[0][0].content).toBe('testing a form...');
 });
-
-test('renders no shit', () => {
-    const note = {
-        content: 'This is a reminder',
-        important: true
-    };
-
-    render(<Note note={note} />);
-
-    const element = screen.queryByText('do not want this shit to be rendered');
-    expect(element).toBeNull();
-});
